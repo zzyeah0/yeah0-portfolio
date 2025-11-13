@@ -1,5 +1,6 @@
 import {Mail, CircleUser, Cake} from "lucide-react";
-import pic from '@/img/selfie.jpg'
+
+const pic = new URL(`../assets/selfie.jpg`, import.meta.url).href;
 
 interface TimelineEntry {
   startYear: number;
