@@ -6,7 +6,7 @@ import { createServer } from "./server";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), expressPlugin()],
-  base: "/yeah0-portfolio",  
+  base: "/yeah0-portfolio/",  
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
