@@ -19,7 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <BrowserRouter basename={import.meta.env.VITE_APP_SERVER_URL}>
         <Routes>
           <Route element={<SiteLayout />}>
             <Route index element={<Index />} />
