@@ -76,7 +76,7 @@ export function SiteHeader() {
                       to={`/projects/${project.slug}`}
                       className="flex flex-col items-start gap-1 py-2 text-sm"
                     >
-                      <span className="font-semibold text-foreground/80">
+                      <span className="font-semibold text-foreground/80 font-notoSans">
                         {project.name}
                       </span>                      
                     </Link>

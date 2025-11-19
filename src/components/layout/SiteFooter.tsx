@@ -8,14 +8,9 @@ const socialLinks = [
   },
   {
     label: "GitHub",
-    href: "https://github.com/jangyeyoung",
+    href: "https://github.com/zzyeah0",
     icon: Github,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/jangyeyoung",
-    icon: Linkedin,
-  },
+  },  
 ];
 
 export function SiteFooter() {
