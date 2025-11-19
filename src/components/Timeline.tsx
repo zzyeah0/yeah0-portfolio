@@ -34,13 +34,13 @@ const timeline: TimelineEntry[] = [
   },
 ];
 
-export function Timeline() {  
-  
+export function Timeline() {      
+
   return (
     <div className="relative space-y-8">        
       <div className="relative gap-4 inline-flex">
-        <img src={pic} style={{width:"27%", borderRadius:"100%"}}/>
-        <ul>
+        <img src={pic} className="rounded-full min-w-20 max-w-25"/>
+        <ul className="object-center">
             <li><span className="inline-flex items-center gap-2 font-notoSans"><CircleUser className="h-4 w-4"/>장예영</span></li>
             <li><span className="inline-flex items-center gap-2 font-notoSans"><Cake className="h-4 w-4"/>1992.06.16</span></li>
             <li><span className="inline-flex items-center gap-2 font-notoSans"><Mail className="h-4 w-4"/>zzangyeah0@gmail.com</span></li>
@@ -48,7 +48,7 @@ export function Timeline() {
       </div>
       <div className="flex gap-8">        
         <div className="relative flex flex-col items-center">
-          <div className="relative h-full w-1 bg-gradient-to-b from-primary via-primary/60 to-primary/20">
+          <div className="relative h-[275px] w-1 bg-gradient-to-b from-primary via-primary/60 to-primary/20">
             {timeline.map((entry, index) => (
               <div
                 key={`${entry.company}-${entry.startYear}`}
@@ -63,10 +63,10 @@ export function Timeline() {
         </div>
 
         <div id="timelineConts" className="space-y-8 pb-4">
-          {timeline.map((entry) => (
+          {timeline.map((entry, idx) => (
             <div
               key={`${entry.company}-${entry.startYear}`}
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-2"              
             >
                 <div className="flex items-center gap-2">
                 <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">

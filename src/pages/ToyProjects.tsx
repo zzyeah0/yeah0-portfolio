@@ -109,10 +109,10 @@ export default function ToyProjects() {
                   <ArrowRight className="mt-1 h-4 w-4 text-primary" />
                   <p className="text-base text-foreground/70 font-notoSans">Github 업로드를 이용한 호스팅</p>
                 </li>
-                <li className="flex gap-4">                  
-                   <div className="space-y-6">                    
-                    <Gallery images={images.portfolio} projectName={'portfolio'}/>                    
-                  </div>               
+                <li className="flex gap-4">
+                  <div className="space-y-6">
+                    <Gallery images={images.portfolio} projectName={'portfolio'} />
+                  </div>
                 </li>
               </ul>
             </div>
@@ -135,6 +135,22 @@ export default function ToyProjects() {
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
                   <p className="text-base text-foreground/70 font-notoSans">프리로딩을 통한 이미지 로딩시간 단축</p>
+                </li>
+                <li className="flex gap-4">
+                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                  <p className="text-base text-foreground/70 font-notoSans">gh-pages 이용하여 동적 웹 페이지 배포</p>
+                </li>
+                <li className="flex gap-4">
+                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                  <p className="text-base text-foreground/70 font-notoSans">Route</p>
+                </li>
+                <li className="flex gap-4">
+                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                  <p className="text-base text-foreground/70 font-notoSans">github Actions를 이용한 CI/CD 자동화</p>
+                </li>
+                <li className="flex gap-4">
+                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                  <p className="text-base text-foreground/70 font-notoSans">vite</p>
                 </li>
               </ul>
             </div>
@@ -201,9 +217,9 @@ export default function ToyProjects() {
                   <p className="text-base text-foreground/70 font-notoSans">크롤링 완료 후 지정된 경로에 csv 파일 생성</p>
                 </li>
                 <li className="flex gap-4">
-                   <div className="space-y-6">                    
-                    <Gallery images={images.scraping} projectName={'scraping'}/>                    
-                  </div>               
+                  <div className="space-y-6">
+                    <Gallery images={images.scraping} projectName={'scraping'} />
+                  </div>
                 </li>
               </ul>
             </div>
@@ -218,11 +234,11 @@ export default function ToyProjects() {
               <ul className="space-y-2">
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">python을 이용한 스크래핑 프로그램 구축 경험</p>                  
+                  <p className="text-base text-foreground/70 font-notoSans">python을 이용한 스크래핑 프로그램 구축 경험</p>
                 </li>
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">웹 자동화 오픈소스 프레임워크 selenium 사용 경험</p>                  
+                  <p className="text-base text-foreground/70 font-notoSans">웹 자동화 오픈소스 프레임워크 selenium 사용 경험</p>
                 </li>
               </ul>
             </div>
@@ -274,12 +290,12 @@ export default function ToyProjects() {
               <ul className="space-y-2">
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">AI 기반 퍼블리싱 플랫폼 Builder.io를 이용하여 퍼블리싱</p>
+                  <p className="text-base text-foreground/70 font-notoSans">SPA 웹 페이지</p>
                 </li>
                 <li className="flex gap-4">
-                  <div className="space-y-6">                    
-                    <Gallery images={images.spidergame} projectName={'spidergame'}/>                    
-                  </div>               
+                  <div className="space-y-6">
+                    <Gallery images={images.spidergame} projectName={'spidergame'} />
+                  </div>
                 </li>
               </ul>
             </div>
@@ -292,9 +308,27 @@ export default function ToyProjects() {
 
             <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
               <ul className="space-y-2">
+                <li className="flex flex-col gap-2">
+                  <div className="flex gap-4">
+                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                    <p className="text-base text-foreground/70 font-notoSans">React 전환 프로젝트 투입 전 React 학습</p>
+                  </div>                  
+                  <div className="flex gap-4 pl-3">
+                    <ul>
+                      <li className="flex gap-4">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
+                        <p className="text-base text-foreground/70 font-notoSans">SSR, CSR 개념 및 차이점 학습</p>
+                      </li>
+                      <li className="flex gap-4">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
+                        <p className="text-base text-foreground/70 font-notoSans">JSX, hooks 등 react 기본 개념 학습</p>
+                      </li>
+                    </ul>
+                  </div>                  
+                </li>                
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70">AI 기반 퍼블리싱 플랫폼 Builder.io를 이용하여 퍼블리싱</p>
+                  <p className="text-base text-foreground/70 font-notoSans">Next.js 이용한 웹페이지 생성</p>
                 </li>
               </ul>
             </div>

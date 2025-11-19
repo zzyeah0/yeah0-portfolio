@@ -5,7 +5,8 @@ const image4 = new URL(`../assets/coding.webp`, import.meta.url).href;
 const image5 = new URL(`../assets/scraping1.png`, import.meta.url).href;
 const image6 = new URL(`../assets/scraping2.png`, import.meta.url).href;
 const image7 = new URL(`../assets/scraping3.png`, import.meta.url).href;
-const image8 = new URL(`../assets/spidergame.pngp`, import.meta.url).href;
+const image8 = new URL(`../assets/spidergame.png`, import.meta.url).href;
+const image9 = new URL(`../assets/hosting.png`, import.meta.url).href;
 
 export const images = {
 
@@ -14,6 +15,7 @@ export const images = {
     image2,
     image3,
     image4,
+    image9,
   ],
   scraping: [
     image5,

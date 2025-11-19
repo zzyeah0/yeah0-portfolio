@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
+import AnchorLink from 'react-anchor-link-smooth-scroll';
 
 import {
   DropdownMenu,
@@ -11,8 +12,8 @@ import {
 import { projects } from "@/data/projects";
 
 const sectionLinks = [
-  { label: "About", to: "/#about" },
-  { label: "Skills", to: "/#skills" },  
+  { label: "About", to: "#about" },
+  { label: "Skills", to: "#skills" },  
 ];
 
 export function SiteHeader() {
@@ -41,13 +42,14 @@ export function SiteHeader() {
 
           <nav className="hidden items-center gap-10 text-sm font-medium md:flex">            
             {sectionLinks.map((item) => (
-              <Link
+              <AnchorLink
                 key={item.label}
-                to={item.to}
+                href={item.to}
+                offset={100}
                 className="text-foreground/70 transition-colors hover:text-foreground font-notoSans"
               >
                 {item.label}
-              </Link>
+              </AnchorLink>
             ))}
            {/* <a
               href="https://jangyeyoung.dev/resume.pdf"
