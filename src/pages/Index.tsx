@@ -2,6 +2,23 @@ import {ArrowUpRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { projects } from "@/data/projects";
 import { Timeline } from "@/components/Timeline";
+import { images } from "@/img/portfolioimg";
+
+// 이미지 Preload 함수
+const preloadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = resolve;
+    img.onerror = reject;
+  });
+};
+
+// 프로젝트 이미지 Preload
+const imageUrls = Object.values(images).map((title) => title.join(",")).join().split(",");
+imageUrls.forEach((url) => {    
+  preloadImage(url).catch((error) => console.error(`Failed to preload image: ${url}`, error));
+});
 
 const skillGroups = [
   {
@@ -65,7 +82,6 @@ const profile = [
     year: "2011.02 - 2017.08",
   },
 ];
-
 
 export default function Index() {
   return (

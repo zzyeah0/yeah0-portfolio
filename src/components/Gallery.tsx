@@ -6,26 +6,26 @@ interface GalleryProps {
   projectName: string;
 }
 
-
 export function Gallery({ images, projectName }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [showNavButtons, setShowNavButtons] = useState(true);
+  const [showNavButtons, setShowNavButtons] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const imageHeight = 250;
 
   useEffect(() => {
-    const checkScroll = () => {
-      if (scrollContainerRef.current) {
-        const { scrollWidth, clientWidth } = scrollContainerRef.current; 
-        setShowNavButtons(scrollWidth > clientWidth);        
+    const checkScroll = () => {            
+      if (scrollContainerRef.current && scrollContainerRef.current.children[0].clientWidth>0) {        
+        const { scrollWidth, clientWidth } = scrollContainerRef.current;         
+        setShowNavButtons(scrollWidth > clientWidth);                        
       }
     };
-
-    checkScroll();
-    window.addEventListener("resize", checkScroll);
+    
+    checkScroll();    
+    window.addEventListener("resize", checkScroll);    
     return () => window.removeEventListener("resize", checkScroll);
-  }, [images]);
-
+    
+  }, [images]);  
+  
   useEffect(() => {
     if (selectedImage) {
       document.body.classList.add("gallery-modal-open");
@@ -78,7 +78,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
                 onError={(e) => {
                   e.currentTarget.src =
                     "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=280&fit=crop";
-                }}
+                }}                
               />
               <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover/image:bg-black/10" />
             </button>
