@@ -30,7 +30,9 @@
     "paths": {
       "@/*": ["./src/*"],
       "@shared/*": ["./shared/*"]
-    }
+    },
+
+    "types": ["vite/client"]
   },
   "include": [
     "src/**/*",

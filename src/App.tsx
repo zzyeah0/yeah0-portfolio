@@ -13,13 +13,13 @@ import ToyProjects from "./pages/ToyProjects";
 import { SiteLayout } from "./components/layout/SiteLayout";
 
 const queryClient = new QueryClient();
-
+console.log(import.meta)
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename={import.meta.env.VITE_APP_SERVER_URL}>
+      <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
         <Routes>
           <Route element={<SiteLayout />}>
             <Route index element={<Index />} />
