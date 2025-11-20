@@ -136,6 +136,11 @@ export default function ToyProjects() {
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
                   <p className="text-base text-foreground/70 font-notoSans">프리로딩을 통한 이미지 로딩시간 단축</p>
                 </li>
+                <li className="flex gap-4">
+                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                  <p className="text-base text-foreground/70 font-notoSans">github Pages를 이용한 동적 웹 페이지 배포</p>
+                </li>
+                {/*
                  <li className="flex flex-col gap-2">
                   <div className="flex gap-4">
                     <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
@@ -149,7 +154,7 @@ export default function ToyProjects() {
                       </li>                      
                     </ul>
                   </div>                  
-                </li>                     
+                </li>        */}              
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
                   <p className="text-base text-foreground/70 font-notoSans">github Actions를 이용한 CI/CD 자동화</p>
