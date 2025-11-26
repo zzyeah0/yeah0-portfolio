@@ -152,7 +152,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
           </button>
           {showBeforeButtons && (<button
             onClick={() => nextImage(false)}
-            className="absolute top-50 left-4 flex h-10 w-10 items-center justify-center text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
+            className="absolute top-50 left-4 flex h-10 w-10 items-center justify-center bg-black/10 text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
             aria-label="Move to before image">
             <ChevronLeft className="h-6 w-6" />  
           </button>)}
@@ -168,7 +168,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
           />
           {showNextButtons && (<button
            onClick={() => nextImage(true)}
-           className="absolute top-50 right-4 flex h-10 w-10 items-center justify-center text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
+           className="absolute top-50 right-4 flex h-10 w-10 items-center justify-center bg-black/10 text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
            aria-label="Move to next image">
             <ChevronRight className="h-6 w-6" />  
           </button>)}

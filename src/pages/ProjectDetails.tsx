@@ -203,7 +203,7 @@ export default function ProjectDetails() {
             key={contribution.level1}>
             <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary font-notoSans"
             >
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="size-4 min-w-4" />
               {contribution.level1}
             </span>
             {contribution.level2.length > 0
@@ -211,7 +211,7 @@ export default function ProjectDetails() {
                 <ul className="space-y-2">
                   {contribution.level2.map((item, i) => (
                     <li key={item} className="flex gap-4">
-                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                      <span className="mt-2 size-2.5 min-w-2.5 rounded-full bg-primary/80" />
                       <p className="text-base text-foreground/70 font-notoSans">{contribution.level2[i]}</p>
                     </li>
                   ))}
