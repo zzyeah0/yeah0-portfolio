@@ -9,7 +9,9 @@ interface GalleryProps {
 export function Gallery({ images, projectName }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showNavButtons, setShowNavButtons] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showNextButtons, setShowNextButtons] = useState(false);
+  const [showBeforeButtons, setShowBeforeButtons] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);  
   const imageHeight = 250;
 
   useEffect(() => {
@@ -28,7 +30,8 @@ export function Gallery({ images, projectName }: GalleryProps) {
   
   useEffect(() => {
     if (selectedImage) {
-      document.body.classList.add("gallery-modal-open");
+      checkIdx();
+      document.body.classList.add("gallery-modal-open");      
     } else {
       document.body.classList.remove("gallery-modal-open");
     }
@@ -36,6 +39,20 @@ export function Gallery({ images, projectName }: GalleryProps) {
       document.body.classList.remove("gallery-modal-open");
     };
   }, [selectedImage]);
+
+  const checkIdx = () => {
+    if(images.indexOf(selectedImage) == 0) {
+      setShowBeforeButtons(false);
+      setShowNextButtons(true);
+    }else if(images.length == images.indexOf(selectedImage)+1){
+      setShowNextButtons(false);
+      setShowBeforeButtons(true);
+    }else{
+      setShowNextButtons(true);
+      setShowBeforeButtons(true);
+    }
+  }
+  
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -55,6 +72,19 @@ export function Gallery({ images, projectName }: GalleryProps) {
       setSelectedImage(null);
     }
   };
+
+  const nextImage = next => {
+    const idx = images.indexOf(selectedImage);
+    var nextIdx = 0;
+
+    if(next) {
+      nextIdx = idx+1;
+    }else{
+      nextIdx = idx-1;
+    }    
+    setSelectedImage(images[nextIdx]);
+    checkIdx();
+  }
   
   return (    
     <>
@@ -108,7 +138,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
       {selectedImage && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm transition-opacity duration-300"
-          onClick={() => setSelectedImage(null)}
+          //onClick={() => setSelectedImage(null)}
           onKeyDown={handleKeyDown}
           role="dialog"
           aria-modal="true"
@@ -120,9 +150,14 @@ export function Gallery({ images, projectName }: GalleryProps) {
           >
             <X className="h-6 w-6" />
           </button>
-
+          {showBeforeButtons && (<button
+            onClick={() => nextImage(false)}
+            className="absolute top-50 left-4 flex h-10 w-10 items-center justify-center text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
+            aria-label="Move to before image">
+            <ChevronLeft className="h-6 w-6" />  
+          </button>)}
           <img
-            src={selectedImage}
+            src={selectedImage}            
             alt="Enlarged project screenshot"
             className="max-h-[90vh] max-w-[90vw] rounded-2xl border border-white/20 shadow-2xl object-contain"
             onClick={(e) => e.stopPropagation()}
@@ -131,6 +166,12 @@ export function Gallery({ images, projectName }: GalleryProps) {
                 "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop";
             }}
           />
+          {showNextButtons && (<button
+           onClick={() => nextImage(true)}
+           className="absolute top-50 right-4 flex h-10 w-10 items-center justify-center text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
+           aria-label="Move to next image">
+            <ChevronRight className="h-6 w-6" />  
+          </button>)}
         </div>
       )}
     </>

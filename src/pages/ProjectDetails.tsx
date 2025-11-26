@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { projects } from "@/data/projects";
+import { Gallery } from "@/components/Gallery";
 
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -214,6 +215,14 @@ export default function ProjectDetails() {
                       <p className="text-base text-foreground/70 font-notoSans">{contribution.level2[i]}</p>
                     </li>
                   ))}
+                  {contribution.img.length > 0
+                  ? <li className="flex gap-4">
+                      <div className="space-y-6">
+                        <Gallery images={contribution.img} projectName={project.slug} />
+                      </div>
+                    </li>
+                    :<></>}
+                    
                 </ul>
               </div>
               : <></>}

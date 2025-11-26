@@ -1,3 +1,5 @@
+import { images } from '@/img/portfolioimg';
+
 export interface Project {
   slug: string;
   name: string;
@@ -9,6 +11,7 @@ export interface Project {
   contributions: {
     level1: string;
     level2: string[];
+    img: string[];
   }[];
   links: {
     label: string;
@@ -47,12 +50,14 @@ export const projects: Project[] = [
           "입력 값 정합성 체크 및 입력 완료 시 다음 칸 커서 이동 구현",
           "카드번호, 비밀번호 등 입력 값 표시 형식 제어",          
         ],
+        img : [],
       },
       {
         level1 : "공과금 메뉴 하위 모든 화면 및 펀드 가입하기 화면",
         level2 : [
           "단독 실행 및 다단계 결재 화면 내 비밀번호 및 OTP 입력 모듈 교체"
         ],
+        img : [],
       }
     ],
     links: [
@@ -94,6 +99,7 @@ export const projects: Project[] = [
           "Lottie 이용한 UI 개선",
           "팝업 ‘하루동안 보지않기’ 기능 구현"
         ],
+        img : images.jb_1,
       },
       {
         level1 : "상품몰 화면 개선",
@@ -102,6 +108,7 @@ export const projects: Project[] = [
           "관심상품 조회/등록/해제 기능 구현",
           "정렬 순서 변경 구현(추천순, 금리순 등)",
         ],
+        img : images.jb_2,
       },
       {
         level1 : "금융계산기 메뉴 신설",
@@ -109,6 +116,7 @@ export const projects: Project[] = [
           "예금, 적금 상품 만기금액 및 상환 방식에 따른 대출 이자 계산",
           "정규식 이용한 사용자 입력값(숫자만 입력, 자릿수 등) 제어",                    
         ],
+        img : images.jb_3,
       }
     ],
     links: [
@@ -147,6 +155,7 @@ export const projects: Project[] = [
           "보조관리자 지정 및 권한 설정 메뉴 구현",
           "신분증 진위여부 확인 솔루션 도입",
         ],
+        img : [],
       },
     ],
     links: [
@@ -184,6 +193,8 @@ export const projects: Project[] = [
           "관리자페이지 뱅킹관리 이력조회 메뉴 신설",
           "원클릭관리자설정 메뉴 개선 및 역거래 개발",          
         ],
+        img : [          
+        ],
       },
       {
         level1 : "기타",
@@ -192,6 +203,7 @@ export const projects: Project[] = [
           "다국어 페이지 개선",
           "그리드 솔루션 교체",
         ],
+        img : [],
       }
     ],
     links: [
@@ -225,14 +237,17 @@ export const projects: Project[] = [
       {
         level1 : "다양한 머신러닝 알고리즘을 조사하고 프로젝트 목적에 적합한 기법 선정에 참여",
         level2 : [],
+        img : [],
       },
       {
         level1 : "DB 설계 참여",
         level2 : [],
+        img : [],
       },
       {
         level1 : "금융 거래 데이터를 이용한 머신러닝 실행 및 튜닝, 이상 거래 탐지 결과 모니터링 등 플랫폼 화면 설계 및 구현",
         level2 : [],
+        img : [],
       }
     ],
     links: [
