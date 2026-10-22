@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { projects } from "@/data/projects";
 
-const sectionLinks = [
-  { label: "About", to: "#about" },
-  { label: "Skills", to: "#skills" },  
+// About, Skills 메뉴 숨김 처리 (복구하려면 주석 해제)
+const sectionLinks: { label: string; to: string }[] = [
+  // { label: "About", to: "#about" },
+  // { label: "Skills", to: "#skills" },
 ];
 
 export function SiteHeader() {

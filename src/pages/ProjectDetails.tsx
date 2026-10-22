@@ -207,7 +207,7 @@ export default function ProjectDetails() {
               {contribution.level1}
             </span>
             {contribution.level2.length > 0
-              ? <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
+              ? <div className="space-y-10 rounded-3xl border border-border/70 bg-card/20 p-6 shadow-glow">
                 <ul className="space-y-2">
                   {contribution.level2.map((item, i) => (
                     <li key={item} className="flex gap-4">
