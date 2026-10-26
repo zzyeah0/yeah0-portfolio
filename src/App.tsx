@@ -19,7 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename="/yeah0-portfoilo">
+      <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
         <Routes>
           <Route element={<SiteLayout />}>
             <Route index element={<Index />} />

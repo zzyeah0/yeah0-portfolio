@@ -22,6 +22,7 @@ export default {
         gowunDodum : ["Gowun Dodum", "sans-serif"],
         nanumGothic : ["Nanum Gothic", "sans-serif"],
         notoSans : ["Noto Sans KR", "sans-serif"],
+        ibmPlexSans : ["IBM Plex Sans KR", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

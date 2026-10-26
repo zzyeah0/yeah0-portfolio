@@ -130,7 +130,7 @@ export default function ToyProjects() {
                 </li>
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">typescript, tailwind css 등 새로운 기술스택 습득</p>
+                  <p className="text-base text-foreground/70 font-notoSans">typescript, tailwind css, vite 등 새로운 기술스택 습득</p>
                 </li>
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
@@ -138,19 +138,26 @@ export default function ToyProjects() {
                 </li>
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">gh-pages 이용하여 동적 웹 페이지 배포</p>
+                  <p className="text-base text-foreground/70 font-notoSans">github Pages를 이용한 동적 웹 페이지 배포</p>
                 </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">Route</p>
-                </li>
+                {/*
+                 <li className="flex flex-col gap-2">
+                  <div className="flex gap-4">
+                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                    <p className="text-base text-foreground/70 font-notoSans">github Pages를 이용한 동적 웹 페이지 배포</p>
+                  </div>                  
+                  <div className="flex gap-4 pl-3">
+                    <ul>
+                      <li className="flex gap-4">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
+                        <p className="text-base text-foreground/70 font-notoSans">Route 학습</p>
+                      </li>                      
+                    </ul>
+                  </div>                  
+                </li>        */}              
                 <li className="flex gap-4">
                   <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
                   <p className="text-base text-foreground/70 font-notoSans">github Actions를 이용한 CI/CD 자동화</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">vite</p>
                 </li>
               </ul>
             </div>

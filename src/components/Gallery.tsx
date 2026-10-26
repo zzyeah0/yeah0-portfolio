@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface GalleryProps {
@@ -6,29 +7,37 @@ interface GalleryProps {
   projectName: string;
 }
 
-
 export function Gallery({ images, projectName }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [showNavButtons, setShowNavButtons] = useState(true);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showNavButtons, setShowNavButtons] = useState(false);
+  const [showNextButtons, setShowNextButtons] = useState(false);
+  const [showBeforeButtons, setShowBeforeButtons] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);  
   const imageHeight = 250;
 
   useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
     const checkScroll = () => {
-      if (scrollContainerRef.current) {
-        const { scrollWidth, clientWidth } = scrollContainerRef.current; 
-        setShowNavButtons(scrollWidth > clientWidth);        
-      }
+      const { scrollWidth, clientWidth } = container;
+      setShowNavButtons(scrollWidth > clientWidth);
     };
 
     checkScroll();
-    window.addEventListener("resize", checkScroll);
-    return () => window.removeEventListener("resize", checkScroll);
-  }, [images]);
 
+    // 컨테이너와 각 썸네일의 크기 변화를 감지 (이미지 로드로 너비가 확정되는 시점 포함)
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(container);
+    Array.from(container.children).forEach((child) => observer.observe(child));
+
+    return () => observer.disconnect();
+  }, [images]);
+  
   useEffect(() => {
     if (selectedImage) {
-      document.body.classList.add("gallery-modal-open");
+      checkIdx();
+      document.body.classList.add("gallery-modal-open");      
     } else {
       document.body.classList.remove("gallery-modal-open");
     }
@@ -36,6 +45,20 @@ export function Gallery({ images, projectName }: GalleryProps) {
       document.body.classList.remove("gallery-modal-open");
     };
   }, [selectedImage]);
+
+  const checkIdx = () => {
+    if(images.indexOf(selectedImage) == 0) {
+      setShowBeforeButtons(false);
+      setShowNextButtons(true);
+    }else if(images.length == images.indexOf(selectedImage)+1){
+      setShowNextButtons(false);
+      setShowBeforeButtons(true);
+    }else{
+      setShowNextButtons(true);
+      setShowBeforeButtons(true);
+    }
+  }
+  
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -55,6 +78,19 @@ export function Gallery({ images, projectName }: GalleryProps) {
       setSelectedImage(null);
     }
   };
+
+  const nextImage = next => {
+    const idx = images.indexOf(selectedImage);
+    var nextIdx = 0;
+
+    if(next) {
+      nextIdx = idx+1;
+    }else{
+      nextIdx = idx-1;
+    }    
+    setSelectedImage(images[nextIdx]);
+    checkIdx();
+  }
   
   return (    
     <>
@@ -78,7 +114,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
                 onError={(e) => {
                   e.currentTarget.src =
                     "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=280&fit=crop";
-                }}
+                }}                
               />
               <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover/image:bg-black/10" />
             </button>
@@ -105,24 +141,29 @@ export function Gallery({ images, projectName }: GalleryProps) {
         )}
       </div>
 
-      {selectedImage && (
+      {selectedImage && createPortal(
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm transition-opacity duration-300"
-          onClick={() => setSelectedImage(null)}
+          //onClick={() => setSelectedImage(null)}
           onKeyDown={handleKeyDown}
           role="dialog"
           aria-modal="true"
         >
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
+            className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-300 hover:bg-white/20 md:top-6 md:right-6"
             aria-label="Close enlarged image"
           >
             <X className="h-6 w-6" />
           </button>
-
+          {showBeforeButtons && (<button
+            onClick={() => nextImage(false)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 translate-x-3 z-10 flex h-10 w-10 items-center justify-center bg-black/10 text-white transition-colors duration-300 hover:bg-white/20 md:translate-x-4"
+            aria-label="Move to before image">
+            <ChevronLeft className="h-6 w-6" />  
+          </button>)}
           <img
-            src={selectedImage}
+            src={selectedImage}            
             alt="Enlarged project screenshot"
             className="max-h-[90vh] max-w-[90vw] rounded-2xl border border-white/20 shadow-2xl object-contain"
             onClick={(e) => e.stopPropagation()}
@@ -131,7 +172,14 @@ export function Gallery({ images, projectName }: GalleryProps) {
                 "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&h=600&fit=crop";
             }}
           />
-        </div>
+          {showNextButtons && (<button
+           onClick={() => nextImage(true)}
+           className="absolute right-4 top-1/2 -translate-y-1/2 translate-x-3 z-10 flex h-10 w-10 items-center justify-center bg-white/10 text-white transition-colors duration-300 hover:bg-white/20 md:translate-x-4"
+           aria-label="Move to next image">
+            <ChevronRight className="h-6 w-6" />  
+          </button>)}
+        </div>,
+        document.body
       )}
     </>
   );

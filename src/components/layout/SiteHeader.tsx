@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { projects } from "@/data/projects";
 
-const sectionLinks = [
-  { label: "About", to: "#about" },
-  { label: "Skills", to: "#skills" },  
+// About, Skills 메뉴 숨김 처리 (복구하려면 주석 해제)
+const sectionLinks: { label: string; to: string }[] = [
+  // { label: "About", to: "#about" },
+  // { label: "Skills", to: "#skills" },
 ];
 
 export function SiteHeader() {
@@ -76,7 +77,7 @@ export function SiteHeader() {
                       to={`/projects/${project.slug}`}
                       className="flex flex-col items-start gap-1 py-2 text-sm"
                     >
-                      <span className="font-semibold text-foreground/80">
+                      <span className="font-semibold text-foreground/80 font-notoSans">
                         {project.name}
                       </span>                      
                     </Link>
@@ -110,44 +111,26 @@ export function SiteHeader() {
             <div className="flex flex-col gap-4">
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.3em] text-foreground/50">
-                  Toy projects
+                  Projects
                 </p>
                 <div className="flex flex-col gap-2">
                   {projects.map((project) => (
                     <Link
                       key={project.slug}
                       to={`/projects/${project.slug}`}
-                      className="text-base font-semibold text-foreground/80"
+                      className="text-base font-semibold text-foreground/80 font-notoSans"
                     >
                       {project.name}
                     </Link>
                   ))}
-                </div>
-              </div>
-              <div className="space-y-2 pt-2">
-                <p className="text-xs uppercase tracking-[0.3em] text-foreground/50">
-                  Explore
-                </p>
-                <div className="flex flex-col gap-2">
-                  {sectionLinks.map((item) => (
-                    <Link
-                      key={item.label}
-                      to={item.to}
-                      className="text-base font-semibold text-foreground/80"
+                    <Link                      
+                      to={'toyproject'}
+                      className="text-base font-semibold text-foreground/80 font-notoSans"
                     >
-                      {item.label}
+                      Toy Projects
                     </Link>
-                  ))}
                 </div>
-              </div>
-              <a
-                href="https://jangyeyoung.dev/resume.pdf"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-primary/40 bg-primary/15 px-4 py-2 text-sm font-semibold text-primary"
-              >
-                Resume
-              </a>
+              </div>                  
             </div>
           </div>
         ) : null}

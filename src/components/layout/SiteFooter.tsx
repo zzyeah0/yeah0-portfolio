@@ -8,14 +8,9 @@ const socialLinks = [
   },
   {
     label: "GitHub",
-    href: "https://github.com/jangyeyoung",
+    href: "https://github.com/zzyeah0",
     icon: Github,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/jangyeyoung",
-    icon: Linkedin,
-  },
+  },  
 ];
 
 export function SiteFooter() {
@@ -23,19 +18,11 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-border/70 bg-background/70 backdrop-blur-xl">
-      <div className="container flex flex-col gap-8 py-12 md:flex-row md:items-center md:justify-between">
-        <div className="max-w-xl space-y-3">
-          <p className="text-xs uppercase tracking-[0.4em] text-foreground/60">
-            crafted in seoul
+      <div className="container flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">
+        <div className="max-w-xl space-y-3 md:self-end">
+          <p className="text-sm text-foreground/60">
+            © 2026 Jang Ye Yeong. All rights reserved.
           </p>
-          <h2 className="text-2xl font-semibold text-foreground md:text-3xl">
-            Let’s build intuitive web experiences together.
-          </h2>
-         {/* <p className="text-sm text-foreground/70">
-            I partner with creative teams and founders to launch polished
-            interfaces that feel effortless. Drop a line and let’s start the
-            conversation.
-          </p>*/}
         </div>
         <div className="flex flex-col gap-4 md:items-end">
           <div className="flex gap-3">
@@ -52,9 +39,6 @@ export function SiteFooter() {
               </a>
             ))}
           </div>
-          <p className="text-sm text-foreground/60">
-            © {year} 장예영 · Built with curiosity and care.
-          </p>
         </div>
       </div>
     </footer>

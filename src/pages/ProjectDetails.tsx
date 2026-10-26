@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { projects } from "@/data/projects";
+import { Gallery } from "@/components/Gallery";
 
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -202,18 +203,26 @@ export default function ProjectDetails() {
             key={contribution.level1}>
             <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary font-notoSans"
             >
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="size-4 min-w-4" />
               {contribution.level1}
             </span>
             {contribution.level2.length > 0
-              ? <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
+              ? <div className="space-y-10 rounded-3xl border border-border/70 bg-card/20 p-6 shadow-glow">
                 <ul className="space-y-2">
                   {contribution.level2.map((item, i) => (
                     <li key={item} className="flex gap-4">
-                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
+                      <span className="mt-2 size-2.5 min-w-2.5 rounded-full bg-primary/80" />
                       <p className="text-base text-foreground/70 font-notoSans">{contribution.level2[i]}</p>
                     </li>
                   ))}
+                  {contribution.img.length > 0
+                  ? <li className="flex gap-4">
+                      <div className="space-y-6">
+                        <Gallery images={contribution.img} projectName={project.slug} />
+                      </div>
+                    </li>
+                    :<></>}
+                    
                 </ul>
               </div>
               : <></>}
