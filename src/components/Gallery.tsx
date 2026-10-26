@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface GalleryProps {
@@ -15,18 +16,23 @@ export function Gallery({ images, projectName }: GalleryProps) {
   const imageHeight = 250;
 
   useEffect(() => {
-    const checkScroll = () => {            
-      if (scrollContainerRef.current && scrollContainerRef.current.children[0].clientWidth>0) {        
-        const { scrollWidth, clientWidth } = scrollContainerRef.current;         
-        setShowNavButtons(scrollWidth > clientWidth);                        
-      }
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const checkScroll = () => {
+      const { scrollWidth, clientWidth } = container;
+      setShowNavButtons(scrollWidth > clientWidth);
     };
-    
-    checkScroll();    
-    window.addEventListener("resize", checkScroll);    
-    return () => window.removeEventListener("resize", checkScroll);
-    
-  }, [images]);  
+
+    checkScroll();
+
+    // 컨테이너와 각 썸네일의 크기 변화를 감지 (이미지 로드로 너비가 확정되는 시점 포함)
+    const observer = new ResizeObserver(checkScroll);
+    observer.observe(container);
+    Array.from(container.children).forEach((child) => observer.observe(child));
+
+    return () => observer.disconnect();
+  }, [images]);
   
   useEffect(() => {
     if (selectedImage) {
@@ -135,7 +141,7 @@ export function Gallery({ images, projectName }: GalleryProps) {
         )}
       </div>
 
-      {selectedImage && (
+      {selectedImage && createPortal(
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm transition-opacity duration-300"
           //onClick={() => setSelectedImage(null)}
@@ -172,7 +178,8 @@ export function Gallery({ images, projectName }: GalleryProps) {
            aria-label="Move to next image">
             <ChevronRight className="h-6 w-6" />  
           </button>)}
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
