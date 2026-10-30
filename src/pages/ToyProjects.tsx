@@ -304,6 +304,17 @@ export default function ToyProjects() {
                     <Gallery images={images.spidergame} projectName={'spidergame'} />
                   </div>
                 </li>
+                <li className="flex justify-end gap-4">
+                  <a
+                    href={`/${import.meta.env.VITE_BASE_URL}game`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold font-notoSans uppercase tracking-[0.3em] text-primary hover:bg-primary/20"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    게임 해보기
+                  </a>
+                </li>
               </ul>
             </div>
           </section>

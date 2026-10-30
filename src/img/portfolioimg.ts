@@ -23,6 +23,9 @@ const image21 = new URL(`../assets/jb3_05.webp`, import.meta.url).href;
 const image22 = new URL(`../assets/jb3_06.webp`, import.meta.url).href;
 const image23 = new URL(`../assets/jb3_07.webp`, import.meta.url).href;
 
+const image24 =  new URL(`../assets/spider01.png`, import.meta.url).href;
+const image25 =  new URL(`../assets/spider02.png`, import.meta.url).href;
+
 export const images = {
 
   portfolio: [
@@ -38,7 +41,8 @@ export const images = {
     image7,
   ],
   spidergame:[
-    image8,
+    image24,
+    image25,
   ],
 
   jb_1:[

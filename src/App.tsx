@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Projects from "./pages/ProjectDetails";
 import ToyProjects from "./pages/ToyProjects";
+import Game from "./pages/Game";
 import { SiteLayout } from "./components/layout/SiteLayout";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
         <Routes>
+          {/* 헤더/푸터 없이 새 창에서 여는 게임 페이지 */}
+          <Route path="game" element={<Game />} />
           <Route element={<SiteLayout />}>
             <Route index element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
