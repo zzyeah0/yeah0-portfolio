@@ -11,12 +11,44 @@ const cardImages = import.meta.glob('@/assets/cards/*.png', {
 const COLS = 10;
 const MAX_HINTS = 3;
 const FLY_MS = 1300; // 완성 세트가 날아가는 전체 시간 (CSS 애니메이션과 맞출 것)
-const CARD_W = 80;
-const CARD_H = 128; // 이미지 비율(256x409) 기준
-// 열 10개(칸 테두리 2px*2 포함)와 간격 10px을 합친 보드 너비
-const BOARD_W = COLS * (CARD_W + 4) + (COLS - 1) * 10;
-const UP_GAP = 34;
-const DOWN_GAP = 14;
+const MAX_CARD_W = 80;
+
+type Layout = {
+    cardW: number; cardH: number; upGap: number; downGap: number;
+    gap: number; pad: number; topGap: number; overlap: number;
+    step: number; boardW: number;
+};
+
+// 화면 너비에 맞춰 카드 크기를 계산 (열 10개가 가로 스크롤 없이 다 보이도록)
+const calcLayout = (vw: number): Layout => {
+    const small = vw < 640;
+    const pad = small ? 6 : 28;
+    const gap = small ? 3 : 10;
+    // 열 10개(칸 테두리 2px*2 포함)와 열 사이 간격을 뺀 나머지를 카드 너비로
+    const cardW = Math.max(24, Math.min(MAX_CARD_W, Math.floor((vw - pad * 2 - (COLS - 1) * gap - COLS * 4) / COLS)));
+    const s = cardW / MAX_CARD_W;
+    return {
+        cardW,
+        cardH: Math.round(cardW * 1.6), // 이미지 비율(256x409) 기준
+        upGap: Math.max(10, Math.round(34 * s)),
+        downGap: Math.max(4, Math.round(14 * s)),
+        gap, pad,
+        topGap: small ? 8 : 20,
+        overlap: Math.round(55 * s),
+        step: cardW + 4 + gap,
+        boardW: COLS * (cardW + 4) + (COLS - 1) * gap,
+    };
+};
+
+const useLayout = () => {
+    const [vw, setVw] = useState(() => window.innerWidth);
+    useEffect(() => {
+        const onResize = () => setVw(window.innerWidth);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+    return calcLayout(vw);
+};
 
 type Card = { id: number; val: number; up: boolean };
 type Column = Card[];
@@ -61,7 +93,7 @@ const flipTop = (col: Column) => {
 
 // K~A 13장이 완성된 열이 있으면 제거하고, 제거한 세트 정보를 반환
 // (날아가는 애니메이션용으로 열 번호와 각 카드의 열 안 위치(top)를 함께 담음)
-const removeCompleted = (cols: Column[]) => {
+const removeCompleted = (cols: Column[], upGap: number, downGap: number) => {
     const sets: CompletedSet[] = [];
     cols.forEach((col, c) => {
         if (col.length < 13) return;
@@ -69,8 +101,8 @@ const removeCompleted = (cols: Column[]) => {
         if (tail.every((card, i) => card.up && card.val === 13 - i)) {
             const startIdx = col.length - 13;
             let base = 0;
-            for (let i = 0; i < startIdx; i++) base += col[i].up ? UP_GAP : DOWN_GAP;
-            sets.push({ col: c, tops: tail.map((_, k) => base + k * UP_GAP), vals: tail.map(card => card.val) });
+            for (let i = 0; i < startIdx; i++) base += col[i].up ? upGap : downGap;
+            sets.push({ col: c, tops: tail.map((_, k) => base + k * upGap), vals: tail.map(card => card.val) });
             col.splice(startIdx, 13);
             flipTop(col);
         }
@@ -113,6 +145,8 @@ const findMove = (cols: Column[]): Move | null => {
 const hasMove = (cols: Column[]) => findMove(cols) !== null;
 
 export default function Game() {
+    const L = useLayout();
+    const { cardW, cardH, upGap, downGap } = L;
     const [started, setStarted] = useState(false);
     const [cols, setCols] = useState<Column[]>([]);
     const [stock, setStock] = useState<Card[]>([]);
@@ -214,7 +248,7 @@ export default function Game() {
         const next = cols.map(c => [...c]);
         const dealt = stock.slice(-COLS);
         dealt.forEach((card, i) => next[i].push({ ...card, up: true }));
-        const removed = removeCompleted(next);
+        const removed = removeCompleted(next, upGap, downGap);
 
         setCols(next);
         setStock(stock.slice(0, -COLS));
@@ -230,7 +264,7 @@ export default function Game() {
         const moving = next[from].splice(idx);
         next[target].push(...moving);
         flipTop(next[from]);
-        const removed = removeCompleted(next);
+        const removed = removeCompleted(next, upGap, downGap);
 
         setCols(next);
         applyCompleted(removed);
@@ -257,15 +291,17 @@ export default function Game() {
         canMove: typeof canMove;
         moveTo: typeof moveTo;
         clearSelection: () => void;
+        L: Layout;
     } | null>(null);
     const [dragView, setDragView] = useState<DragView | null>(null);
 
     // 포인터 위치 아래의 열 중, 드롭 가능한 열 번호 (없으면 null)
     const dropTarget = (e: PointerEvent, d: DragState) => {
         if (!boardRef.current || !latest.current) return null;
+        const { cardH, step, gap } = latest.current.L;
         const rect = boardRef.current.getBoundingClientRect();
-        if (e.clientY < rect.top + CARD_H + 10) return null; // 위쪽 줄(완성 덱/추가 카드) 위는 제외
-        const c = Math.floor((e.clientX - rect.left + 5) / (CARD_W + 14));
+        if (e.clientY < rect.top + cardH + 10) return null; // 위쪽 줄(완성 덱/추가 카드) 위는 제외
+        const c = Math.floor((e.clientX - rect.left + gap / 2) / step);
         if (c < 0 || c >= COLS) return null;
         return latest.current.canMove(d.col, d.idx, c) ? c : null;
     };
@@ -318,7 +354,7 @@ export default function Game() {
         };
     }, []);
 
-    latest.current = { canMove, moveTo, clearSelection: () => setSelected(null) };
+    latest.current = { canMove, moveTo, clearSelection: () => setSelected(null), L };
 
     // 카드(또는 빈 열) 클릭
     const handleClick = (c: number, idx: number) => {
@@ -363,11 +399,11 @@ export default function Game() {
     // 칸은 카드 한 장 크기로 고정이라, 쌓인 카드가 칸 밖으로 넘치는 높이만큼 아래 여백 확보
     const maxExtra = Math.max(
         0,
-        ...cols.map(col => col.reduce((sum, card) => sum + (card.up ? UP_GAP : DOWN_GAP), 0) - (col.length ? (col[col.length - 1].up ? UP_GAP : DOWN_GAP) : 0))
+        ...cols.map(col => col.reduce((sum, card) => sum + (card.up ? upGap : downGap), 0) - (col.length ? (col[col.length - 1].up ? upGap : downGap) : 0))
     );
 
     return (
-        <div className="Game">
+        <div className="Game" style={{ padding: L.pad }}>
             <h1>Spider Solitaire</h1>
             <button className="undo-button" onClick={undo} disabled={!prev}><Undo2 size={18} /></button>
             <button className="hint-button" onClick={showHint} disabled={hintsUsed >= MAX_HINTS}>
@@ -390,21 +426,21 @@ export default function Game() {
                 </div>
             )}
 
-            <div ref={boardRef} style={{ position: 'relative', width: BOARD_W, margin: '0 auto' }}>
+            <div ref={boardRef} style={{ position: 'relative', width: L.boardW, margin: '0 auto' }}>
             {flying && flying.map(set => set.vals.map((val, k) => {
                 // 열 안의 현재 위치 -> 완성 덱 위치 (완성 덱은 보드 왼쪽 위, 카드마다 25px씩 겹침)
-                const sx = set.col * (CARD_W + 14) + 2;
-                const sy = CARD_H + 22 + set.tops[k];
+                const sx = set.col * L.step + 2;
+                const sy = cardH + L.topGap + 2 + set.tops[k];
                 return (
                     <img
                         key={set.col + '-' + k}
                         src={imgOf(val)}
-                        width={CARD_W}
+                        width={cardW}
                         className="fly-card"
                         style={{
                             left: sx,
                             top: sy,
-                            '--dx': (set.pileIdx * (CARD_W - 55) - sx) + 'px',
+                            '--dx': (set.pileIdx * (cardW - L.overlap) - sx) + 'px',
                             '--dy': (0 - sy) + 'px',
                             animationDelay: (12 - k) * 45 + 'ms',
                             zIndex: 50 + k,
@@ -412,10 +448,10 @@ export default function Game() {
                     />
                 );
             }))}
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: BOARD_W, marginBottom: 20, minHeight: CARD_H }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: L.boardW, marginBottom: L.topGap, minHeight: cardH }}>
                 <div style={{ display: 'flex' }}>
                     {Array.from({ length: shownCompleted }, (_, i) => (
-                        <img key={i} src={imgOf(13)} width={CARD_W} className="pile-card" style={{ marginRight: i === shownCompleted - 1 ? 0 : -55 }} />
+                        <img key={i} src={imgOf(13)} width={cardW} className="pile-card" style={{ marginRight: i === shownCompleted - 1 ? 0 : -L.overlap }} />
                     ))}
                 </div>
                 <div style={{ display: 'flex' }}>
@@ -424,20 +460,20 @@ export default function Game() {
                             key={i}
                             onClick={dealStock}
                             disabled={i !== stock.length / COLS - 1}
-                            style={{ marginRight: i === stock.length / COLS - 1 ? 0 : -55, padding: 0, border: 'none', background: 'none' }}
+                            style={{ marginRight: i === stock.length / COLS - 1 ? 0 : -L.overlap, padding: 0, border: 'none', background: 'none' }}
                         >
-                            <img src={imgOf(0)} width={CARD_W} className={'pile-card' + (dealHint && i === stock.length / COLS - 1 ? ' hint' : '')} />
+                            <img src={imgOf(0)} width={cardW} className={'pile-card' + (dealHint && i === stock.length / COLS - 1 ? ' hint' : '')} />
                         </button>
                     ))}
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, paddingBottom: maxExtra + 20 }}>
+            <div style={{ display: 'flex', gap: L.gap, paddingBottom: maxExtra + 8 }}>
                 {cols.map((col, c) => {
                     let top = 0;
                     const tops = col.map(card => {
                         const t = top;
-                        top += card.up ? UP_GAP : DOWN_GAP;
+                        top += card.up ? upGap : downGap;
                         return t;
                     });
                     return (
@@ -445,7 +481,7 @@ export default function Game() {
                             key={c}
                             className={'slot' + (col.length === 0 ? ' empty' : '') + (moveHint && moveHint.to === c && col.length === 0 ? ' hint' : '') + (dragView && dragView.hover === c ? ' drop-ok' : '')}
                             onClick={col.length === 0 ? () => handleClick(c, 0) : undefined}
-                            style={{ width: CARD_W, height: CARD_H }}
+                            style={{ width: cardW, height: cardH }}
                         >
                             {col.map((card, idx) => {
                                 const isSel = selected && selected.col === c && idx >= selected.idx;
@@ -457,15 +493,15 @@ export default function Game() {
                                 const cardStyle: Record<string, string | number> = { top: tops[idx] };
                                 if (dealtIdx >= 0) {
                                     // 추가 카드 묶음 위치에서 이 자리까지 날아오는 애니메이션
-                                    cardStyle['--dx'] = (BOARD_W - CARD_W - (c * (CARD_W + 14) + 2)) + 'px';
-                                    cardStyle['--dy'] = -(CARD_H + 22 + tops[idx]) + 'px';
+                                    cardStyle['--dx'] = (L.boardW - cardW - (c * L.step + 2)) + 'px';
+                                    cardStyle['--dy'] = -(cardH + L.topGap + 2 + tops[idx]) + 'px';
                                     cardStyle.animationDelay = c * 70 + 'ms';
                                 }
                                 return (
                                     <img
                                         key={card.id}
                                         src={imgOf(card.up ? card.val : 0)}
-                                        width={CARD_W}
+                                        width={cardW}
                                         className={'card' + (card.up ? ' up' : '') + (isSel ? ' selected' : '') + (dealtIdx >= 0 ? ' dealt' : '') + (isHint ? ' hint' : '') + (dragView && dragView.col === c && idx >= dragView.idx ? ' drag-src' : '')}
                                         draggable={false}
                                         onPointerDown={e => onCardPointerDown(e, c, idx)}
@@ -484,10 +520,10 @@ export default function Game() {
                 <img
                     key={card.id}
                     src={imgOf(card.val)}
-                    width={CARD_W}
+                    width={cardW}
                     className="drag-card"
                     draggable={false}
-                    style={{ left: dragView.x - dragView.grabX, top: dragView.y - dragView.grabY + k * UP_GAP, zIndex: 200 + k }}
+                    style={{ left: dragView.x - dragView.grabX, top: dragView.y - dragView.grabY + k * upGap, zIndex: 200 + k }}
                 />
             ))}
         </div>

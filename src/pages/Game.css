@@ -1,6 +1,9 @@
 .Game {
-    min-height: 100vh;
-    padding: 20px 28px;
+    box-sizing: border-box;
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
     background-color: #0b6623;
     color: #fff;
 }
@@ -223,4 +226,35 @@
     border-style: solid;
     border-color: #ffd54a;
     background-color: rgba(255, 213, 74, 0.25);
+}
+
+@media (max-width: 639px) {
+    .Game h1 {
+        margin-bottom: 8px;
+        font-size: 1.3rem;
+    }
+
+    .Game .undo-button,
+    .Game .hint-button {
+        padding: 4px 10px;
+        font-size: 0.85rem;
+    }
+
+    .Game .hint-button {
+        margin-left: 6px;
+    }
+
+    .Game .streak {
+        margin-left: 8px;
+        font-size: 0.85rem;
+    }
+
+    .Game .start-title {
+        font-size: 2.2rem;
+    }
+
+    .Game .start-button {
+        padding: 16px 48px;
+        font-size: 1.5rem;
+    }
 }
