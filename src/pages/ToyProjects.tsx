@@ -1,724 +1,307 @@
 import {
-  ArrowLeft,
   ArrowRight,
   ExternalLink,
-  Github,
+  House,
   Sparkles,
+  MonitorSmartphone,
+  Server,
+  Cloud,
+  FolderGit2,
+  Ellipsis,
+  type LucideIcon,
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
-import { images } from '@/img/portfolioimg';
-import { useState } from 'react';
+import { useState, type ComponentProps } from "react";
+import { Link } from "react-router-dom";
+import { images } from "@/img/portfolioimg";
 import { Gallery } from "@/components/Gallery";
+import { groupSkills, type SkillCategory } from "@/data/skillCategories";
+
+const categoryIcons: Record<SkillCategory, LucideIcon> = {
+  Frontend: MonitorSmartphone,
+  Backend: Server,
+  Infra: Cloud,
+  Tools: FolderGit2,
+  Etc: Ellipsis,
+};
+
+type LearnedItem = { text: string; children?: string[] };
+
+type ToyProject = {
+  tab: string;
+  title: string;
+  summary: string;
+  skills: string[];
+  howTitle: string;
+  howSubtitle?: string;
+  steps?: string[];
+  gallery?: {
+    images: ComponentProps<typeof Gallery>["images"];
+    name: string;
+  };
+  link?: { type: "external" | "route"; href: string; label: string };
+  learned: LearnedItem[];
+};
+
+const reactLearned: LearnedItem[] = [
+  {
+    text: "React 전환 프로젝트 투입 전 React 학습",
+    children: [
+      "SSR, CSR 개념 및 차이점 학습",
+      "JSX, hooks 등 react 기본 개념 학습",
+    ],
+  },
+  { text: "Next.js 이용한 웹페이지 생성" },
+];
+
+const toyProjects: ToyProject[] = [
+  {
+    tab: "Portfolio",
+    title: "PORTFOLIO",
+    summary: "지금 보고 계신 이 웹페이지는 이렇게 만들어졌습니다!",
+    skills: [
+      "React",
+      "TypeScript",
+      "Builder.io",
+      "github",
+      "lucide-react",
+      "vite",
+      "tailwind css",
+    ],
+    howTitle: "How to build",
+    howSubtitle: "AI 기반 퍼블리싱 플랫폼 Builder.io를 이용하여 퍼블리싱",
+    steps: [
+      "프롬프트 입력",
+      "프롬프트 추가 입력을 통한 UI수정",
+      "내용 입력 및 코드 수정",
+      "Github Pages를 이용한 호스팅",
+    ],
+    gallery: { images: images.portfolio, name: "portfolio" },
+    learned: [
+      { text: "AI 기반 퍼블리싱 플랫폼 프롬프트 작성 역량 습득" },
+      { text: "typescript, tailwind css, vite 등 새로운 기술스택 습득" },
+      { text: "프리로딩을 통한 이미지 로딩시간 단축" },
+      { text: "github Pages를 이용한 정적 웹 페이지 배포" },
+      { text: "github Actions를 이용한 CI/CD 자동화" },
+    ],
+  },
+  {
+    tab: "Band Scraping Program",
+    title: "BAND SCRAPING PROGRAM",
+    summary: "네이버 밴드 스크래핑 프로그램",
+    skills: ["PYTHON", "Selenium"],
+    howTitle: "How to work",
+    steps: [
+      "프로그램 실행",
+      "브라우저 실행 및 band.us 로그인 페이지로 이동",
+      "로그인 후 밴드 선택하면 작성자, 작성일자, 내용 등 자동 크롤링 시작",
+      "크롤링 완료 후 지정된 경로에 csv 파일 생성",
+    ],
+    gallery: { images: images.scraping, name: "scraping" },
+    learned: [
+      { text: "python을 이용한 스크래핑 프로그램 구축 경험" },
+      { text: "웹 자동화 오픈소스 프레임워크 selenium 사용 경험" },
+    ],
+  },
+  {
+    tab: "Spider Game",
+    title: "SPIDER GAME",
+    summary: "스파이더 게임",
+    skills: ["REACT", "Next.js"],
+    howTitle: "How to work",
+    gallery: { images: images.spidergame, name: "spidergame" },
+    link: {
+      type: "external",
+      href: `/${import.meta.env.VITE_BASE_URL}game`,
+      label: "게임 해보기",
+    },
+    learned: reactLearned,
+  },
+  /*{
+    tab: "Movie Recommand",
+    title: "MOVIE RECOMMAND",
+    summary: "내가 보고 싶은 영화는?",
+    skills: ["REACT", "Cloudflare"],
+    howTitle: "How to work",
+    link: { type: "route", href: "/movie", label: "추천 받기" },
+    learned: reactLearned,
+  },*/
+];
+
+function SectionTitle({ children }: { children: string }) {
+  return (
+    <h2 className="flex items-center gap-2 text-lg font-bold text-foreground font-notoSans">
+      <Sparkles className="size-4 min-w-4 text-primary" />
+      {children}
+    </h2>
+  );
+}
+
+const linkClass =
+  "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold text-primary font-notoSans hover:bg-primary/20";
 
 export default function ToyProjects() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  const [projectNum, setProjectNum] = useState(1);
-
-  const ProjectConts = () => {
-    if (projectNum == 1) {
-      return (
-        <>
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <div className="grid gap-8">
-              <div className="space-y-6">
-                <h1 className="font-display text-4xl text-foreground md:text-5xl">
-                  PORTFOLIO
-                </h1>
-                <p className="max-w-2xl text-lg text-foreground/70 md:text-xl font-notoSans">
-                  지금 보고 계신 이 웹페이지는 이렇게 만들어졌습니다!
-                </p>
-                <div className="space-y-3 pt-2">
-                  <p className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-                    Skills used
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      React
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      TypeScript
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Builder.io
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      github
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      lucide-react
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      vite
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      tailwind css
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              How to build
-            </h2>
-            <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary font-notoSans"
-            >
-              <Sparkles className="h-4 w-4" />
-              AI 기반 퍼블리싱 플랫폼 Builder.io를 이용하여 퍼블리싱
-            </span>
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">프롬프트 입력</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">프롬프트 추가 입력을 통한 UI수정</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">내용 입력 및 코드 수정</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">Github 업로드를 이용한 호스팅</p>
-                </li>
-                <li className="flex gap-4">
-                  <div className="space-y-6">
-                    <Gallery images={images.portfolio} projectName={'portfolio'} />
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </section>
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              What I Learned
-            </h2>
-
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">AI 기반 퍼블리싱 플랫폼 프롬프트 작성 역량 습득</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">typescript, tailwind css, vite 등 새로운 기술스택 습득</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">프리로딩을 통한 이미지 로딩시간 단축</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">github Pages를 이용한 동적 웹 페이지 배포</p>
-                </li>
-                {/*
-                 <li className="flex flex-col gap-2">
-                  <div className="flex gap-4">
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                    <p className="text-base text-foreground/70 font-notoSans">github Pages를 이용한 동적 웹 페이지 배포</p>
-                  </div>                  
-                  <div className="flex gap-4 pl-3">
-                    <ul>
-                      <li className="flex gap-4">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
-                        <p className="text-base text-foreground/70 font-notoSans">Route 학습</p>
-                      </li>                      
-                    </ul>
-                  </div>                  
-                </li>        */}              
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">github Actions를 이용한 CI/CD 자동화</p>
-                </li>
-              </ul>
-            </div>
-          </section>
-        </>
-      )
-    } else if (projectNum == 2) {
-      return (
-        <>
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <div className="grid gap-8">
-              <div className="space-y-6">
-                <h1 className="font-display text-4xl text-foreground md:text-5xl">
-                  BAND SCRAPING PROGRAM
-                </h1>
-
-                <p className="max-w-2xl text-lg text-foreground/70 md:text-xl font-notoSans">
-                  네이버 밴드 스크래핑 프로그램
-                </p>
-                <div className="space-y-3 pt-2">
-                  <p className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-                    Skills used
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      PYTHON
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Selenium
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              How to work
-            </h2>
-
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">프로그램 실행</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">브라우저 실행 및 band.us 로그인 페이지로 이동</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">로그인 후 밴드 선택하면 작성자, 작성일자, 내용 등 자동 크롤링 시작</p>
-                </li>
-                <li className="flex gap-4">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <p className="text-base text-foreground/70 font-notoSans">크롤링 완료 후 지정된 경로에 csv 파일 생성</p>
-                </li>
-                <li className="flex gap-4">
-                  <div className="space-y-6">
-                    <Gallery images={images.scraping} projectName={'scraping'} />
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              What I Learned
-            </h2>
-
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">python을 이용한 스크래핑 프로그램 구축 경험</p>
-                </li>
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">웹 자동화 오픈소스 프레임워크 selenium 사용 경험</p>
-                </li>
-              </ul>
-            </div>
-          </section>
-        </>
-      )
-    } else if (projectNum == 3) {
-      return (
-        <>
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <div className="grid gap-8">
-              <div className="space-y-6">
-                <h1 className="font-display text-4xl text-foreground md:text-5xl">
-                  SPIDER GAME
-                </h1>
-
-                <p className="max-w-2xl text-lg text-foreground/70 md:text-xl font-notoSans">
-                  스파이더 게임
-                </p>
-                <div className="space-y-3 pt-2">
-                  <p className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-                    Skills used
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      REACT
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                    >
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Next.js
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              How to work
-            </h2>
-
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">SPA 웹 페이지</p>
-                </li>
-                <li className="flex gap-4">
-                  <div className="space-y-6">
-                    <Gallery images={images.spidergame} projectName={'spidergame'} />
-                  </div>
-                </li>
-                <li className="flex justify-end gap-4">
-                  <a
-                    href={`/${import.meta.env.VITE_BASE_URL}game`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold font-notoSans uppercase tracking-[0.3em] text-primary hover:bg-primary/20"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    게임 해보기
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          <section className="container grid gap-4 lg:grid-cols-1">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              What I Learned
-            </h2>
-
-            <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-              <ul className="space-y-2">
-                <li className="flex flex-col gap-2">
-                  <div className="flex gap-4">
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                    <p className="text-base text-foreground/70 font-notoSans">React 전환 프로젝트 투입 전 React 학습</p>
-                  </div>                  
-                  <div className="flex gap-4 pl-3">
-                    <ul>
-                      <li className="flex gap-4">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
-                        <p className="text-base text-foreground/70 font-notoSans">SSR, CSR 개념 및 차이점 학습</p>
-                      </li>
-                      <li className="flex gap-4">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-primary/30" />
-                        <p className="text-base text-foreground/70 font-notoSans">JSX, hooks 등 react 기본 개념 학습</p>
-                      </li>
-                    </ul>
-                  </div>                  
-                </li>                
-                <li className="flex gap-4">
-                  <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                  <p className="text-base text-foreground/70 font-notoSans">Next.js 이용한 웹페이지 생성</p>
-                </li>
-              </ul>
-            </div>
-          </section>
-        </>
-      )
-    }
-
-  }
+  const [projectNum, setProjectNum] = useState(0);
+  const project = toyProjects[projectNum];
+  const skillGroups = groupSkills(project.skills);
 
   return (
-    <article className="space-y-20 pb-24">
-      <section className="container space-y-10 pt-20 md:pt-10">
-        <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
+    <article className="relative space-y-16 pb-24">
+      {/* Hero */}
+      <section className="container space-y-8 pt-20 md:pt-10">
+        <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/"
             className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/70 px-4 py-2 text-xs font-semibold text-foreground/70 transition-colors hover:border-primary/50 hover:text-foreground"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <House className="h-3.5 w-3.5" />
           </Link>
-          <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
-            <button onClick={() => setProjectNum(1)} className="inline-flex">
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Portfolio
-              </span>
+          {toyProjects.map((item, i) => (
+            <button
+              key={item.tab}
+              type="button"
+              onClick={() => setProjectNum(i)}
+              className={`rounded-full px-4 py-2 text-xs font-semibold font-notoSans transition-colors ${
+                i === projectNum
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/70"
+              }`}
+            >
+              {item.tab}
             </button>
-            <button onClick={() => setProjectNum(2)} className="inline-flex">
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Band Scraping Program
-              </span>
-            </button>
-            <button onClick={() => setProjectNum(3)} className="inline-flex">
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Spider Game
-              </span>
-            </button>
-          </div>
+          ))}
+        </div>
+
+        <div className="space-y-6">
+          <h1 className="text-4xl font-extrabold leading-tight text-foreground font-notoSans md:text-5xl">
+            {project.title}
+          </h1>
+          <p className="max-w-2xl text-lg text-foreground/60 font-notoSans">
+            {project.summary}
+          </p>
         </div>
       </section>
-      {ProjectConts()}
+
+      {/* Skills */}
+      <section className="container">
+        <SectionTitle>기술스택</SectionTitle>
+        <div className="mt-2 space-y-3 rounded-2xl border border-border/30 bg-card/30 p-6">
+          {skillGroups.map(({ category, skills }) => {
+            const Icon = categoryIcons[category];
+            return (
+              <div
+                key={category}
+                className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6"
+              >
+                <span className="flex w-28 shrink-0 items-center gap-2 text-sm font-semibold text-foreground/70 font-notoSans">
+                  <Icon className="size-4 min-w-4 text-primary" />
+                  {category}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* How to build / work */}
+      <section className="container space-y-4">
+        <SectionTitle>{project.howTitle}</SectionTitle>
+        {project.howSubtitle && (
+          <p className="text-sm font-semibold text-primary font-notoSans">
+            {project.howSubtitle}
+          </p>
+        )}
+
+        <div className="space-y-6 rounded-2xl border border-border/30 bg-card/30 p-6 shadow-sm">
+          {project.steps && (
+            <ul className="space-y-3">
+              {project.steps.map((step, i) => (
+                <li key={step} className="flex items-start gap-3">
+                  <span className="flex size-6 min-w-6 items-center justify-center rounded-full bg-primary text-[0.65rem] font-bold text-primary-foreground">
+                    {i + 1}
+                  </span>
+                  <p className="text-sm leading-relaxed text-foreground/70 font-notoSans">
+                    {step}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {project.gallery && (
+            <Gallery
+              images={project.gallery.images}
+              projectName={project.gallery.name}
+            />
+          )}
+
+          {project.link && (
+            <div className="flex justify-end">
+              {project.link.type === "external" ? (
+                <a
+                  href={project.link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  {project.link.label}
+                </a>
+              ) : (
+                <Link to={project.link.href} className={linkClass}>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                  {project.link.label}
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* What I Learned */}
+      <section className="container space-y-4">
+        <SectionTitle>What I Learned</SectionTitle>
+        <div className="rounded-2xl border border-border/30 bg-card/30 p-6 shadow-sm">
+          <ul className="space-y-2">
+            {project.learned.map((item) => (
+              <li key={item.text} className="space-y-2">
+                <div className="flex gap-3">
+                  <span className="mt-2.5 size-1.5 min-w-1.5 rounded-full bg-foreground/30" />
+                  <p className="text-sm leading-relaxed text-foreground/70 font-notoSans">
+                    {item.text}
+                  </p>
+                </div>
+                {item.children && (
+                  <ul className="space-y-2 pl-6">
+                    {item.children.map((child) => (
+                      <li key={child} className="flex gap-3">
+                        <span className="mt-2.5 size-1.5 min-w-1.5 rounded-full bg-foreground/15" />
+                        <p className="text-sm leading-relaxed text-foreground/60 font-notoSans">
+                          {child}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* 상단 배경 그라데이션 (ProjectDetails 와 동일, 마지막 자식 + !mt-0 필수) */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 !mt-0 h-[32rem] bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
     </article>
   );
-
-  {/*return (
-    <article className="space-y-24 pb-24">
-      <section className="container space-y-10 pt-20 md:pt-10">
-        <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/70 px-4 py-2 text-xs font-semibold text-foreground/70 transition-colors hover:border-primary/50 hover:text-foreground"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-          </Link>
-          <span className="rounded-full border border-border/70 px-4 py-2 text-[0.65rem] font-semibold text-foreground/60">
-            Project Detail
-          </span>
-        </div>
-        <div className="grid gap-8">
-          <div className="space-y-6">
-            <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Toy Project1
-              </span>
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Toy Project2
-              </span>
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                Toy Project3
-              </span>
-            </div>
-
-            <h1 className="font-display text-4xl text-foreground md:text-5xl">
-              PORTFOLIO
-            </h1>
-
-            <p className="max-w-2xl text-lg text-foreground/70 md:text-xl">
-              
-            </p>
-            <div className="space-y-3 pt-2">
-              <p className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-                Skills used
-              </p>
-              <div className="flex flex-wrap gap-3">                
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    React
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    TypeScript
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Builder.io
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    github
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    lucide-react
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    vite
-                  </span>
-                  <span                    
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    tailwind css
-                  </span>
-              </div>
-            </div>
-          </div>
-          <aside className="space-y-6 rounded-3xl border border-border/70 bg-card/80 p-8 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              Project links
-            </h2>
-            <ul className="space-y-3">
-              
-                <li>
-                  <a
-                    href=''
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group inline-flex w-full items-center justify-between rounded-2xl border border-border/60 bg-card px-4 py-3 text-sm font-semibold text-foreground/80 transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    link.label
-                    <ExternalLink className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </a>
-                </li>
-              
-            </ul>
-            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 text-sm text-primary">
-              Curious how this could look for your product? I’d love to tailor a
-              creative spike—just send over your brief.
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="container grid gap-12 lg:grid-cols-1">
-        <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-          Contribution
-        </h2>
-        <div className="space-y-8 rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-          <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-            Contribution
-          </h2>
-          <ul className="space-y-5">
-            
-              <li className="flex gap-4">
-                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/70" />
-                <p className="text-base text-foreground/70">contribution</p>
-                <ul className="space-y-2">                  
-                    <li className="flex gap-4">
-                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/10" />
-                      <p className="text-base text-foreground/70">contribution</p>
-                    </li>                  
-                </ul>
-              </li>
-            
-          </ul>
-        </div>
-
-        <div className="space-y-8">
-          <div className="rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              What I developed
-            </h2>
-            <ul className="mt-6 space-y-4">              
-                <li className="flex gap-3 text-sm text-foreground/70">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <span>contribution</span>
-                </li>              
-            </ul>
-          </div>
-          <div className="rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              Collaborate with me
-            </h2>
-            <p className="mt-4 text-sm text-foreground/65">
-              I’m exploring partnerships with founders and product teams who value
-              meticulous craft. Share your roadmap and I’ll assemble a sprint
-              plan tailored to your goals.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="mailto:hello@jangyeyoung.dev"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-brand"
-              >
-                Start a conversation
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <a
-                href="https://cal.com/jangyeyoung/intro"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-2 text-sm font-semibold text-foreground/80"
-              >
-                Schedule a call
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container grid gap-4 lg:grid-cols-1">
-        <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-          How to build
-        </h2>
-
-        <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary"
-        >
-          <Sparkles className="h-4 w-4" />
-          Design & Publishing
-        </span>
-        
-        <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-          <ul className="space-y-2">            
-              <li className="flex gap-4">
-                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                <p className="text-base text-foreground/70">AI 기반 퍼블리싱 플랫폼 Builder.io를 이용하여 퍼블리싱</p>
-              </li>
-              <li className="flex gap-4">                
-                  <img src={images.image4} style={{width:"50%", height:"50%"}}/>
-                  <span>프롬프트 입력</span>                
-                 <ArrowRight className="h-3.5 w-3.5" />
-                <img src={images.image1}/>                
-                <img src={images.image3}/>                
-              </li>              
-          </ul>
-        </div>
-        
-        <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary"
-        >
-          <Sparkles className="h-4 w-4" />
-          Edit Code
-        </span>        
-        <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-          <ul className="space-y-2">            
-              <li className="flex gap-4">
-                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                <p className="text-base text-foreground/70">내용삽입</p>
-              </li>
-              <li className="flex gap-4">                
-                  <img src={images.image2} style={{width:"50%", height:"50%"}}/>
-                  <span>프롬프트 입력</span>              
-              </li>              
-          </ul>
-        </div>
-
-         <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary"
-        >
-          <Sparkles className="h-4 w-4" />
-          Hosting
-        </span>        
-        <div className="space-y-8 rounded-3xl border border-border/70 bg-card/20 p-10 shadow-glow">
-          <ul className="space-y-2">            
-              <li className="flex gap-4">
-                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/80" />
-                <p className="text-base text-foreground/70">Github 업로드를 이용한 호스팅</p>
-              </li>
-              <li className="flex gap-4">                
-                  <img src={images.image2} style={{width:"50%", height:"50%"}}/>
-                  <span>프롬프트 입력</span>              
-              </li>              
-          </ul>
-        </div>
-        
-      </section>
-     
-        <section className="container space-y-8">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.35em] text-foreground/50">
-                More playful explorations
-              </p>
-              <h2 className="font-display text-3xl text-foreground md:text-4xl">
-                Continue browsing the archive.
-              </h2>
-            </div>
-            <Link
-              to="/#work"
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              Back to toy projects
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            
-              <Link                
-                to={`/projects/`}
-                className="group relative flex h-full flex-col rounded-3xl border border-border/70 bg-card/80 p-7 shadow-glow transition-transform duration-500 hover:-translate-y-2 hover:border-primary/50"
-              >
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-foreground/50">
-                  <span className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground">
-                    year
-                  </span>
-                  <ArrowRight className="h-5 w-5 text-primary transition-transform duration-500 group-hover:translate-x-1" />
-                </div>
-                <h3 className="mt-6 font-display text-2xl text-foreground">
-                  name
-                </h3>
-                <p className="mt-3 text-sm text-foreground/65">summary</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  
-                    <span                      
-                      className="inline-flex items-center rounded-full border border-border/70 bg-muted/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/70"
-                    >
-                      skill
-                    </span>
-                  
-                </div>
-              </Link>
-            
-          </div>
-        </section>
-      
-
-      <section className="container">
-        <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-primary/20 via-accent/25 to-background p-12 shadow-glow md:p-16">
-          <div className="absolute inset-0 bg-card-gloss opacity-80" />
-          <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-xl space-y-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-foreground/60">
-                Let’s collaborate
-              </p>
-              <h2 className="font-display text-3xl text-foreground md:text-4xl">
-                Have a vision? Let’s prototype it together.
-              </h2>
-              <p className="text-sm text-foreground/65">
-                I blend rapid prototyping with production-ready engineering. Share
-                your challenge and I’ll align on a roadmap within days.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="mailto:hello@jangyeyoung.dev"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-brand"
-              >
-                hello@jangyeyoung.dev
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <a
-                href="https://github.com/jangyeyoung"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-6 py-3 text-sm font-semibold text-foreground/80"
-              >
-                GitHub
-                <Github className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </article>
-  );*/}
 }

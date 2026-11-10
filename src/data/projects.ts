@@ -16,6 +16,13 @@ export interface Project {
   description: string;
   skills: string[];
   highlights: string[];
+  /** 히어로 영역에 보여줄 핵심 요약 카드 (선택) */
+  keyPoints?: {
+    title: string;
+    desc: string;
+  }[];
+  /** 히어로 영역 오른쪽에 보여줄 대표 이미지 (선택) */
+  heroImage?: string;
   contributions: {
     level1: string;
     level2: string[];
@@ -46,6 +53,11 @@ export const projects: Project[] = [
       "Crafted animated drag-and-drop interactions for assembling meal plans across the week.",
       "Integrated a suggestion engine that surfaces recipes based on dietary preferences and pantry availability.",
       "Shipped a polished responsive layout that feels at home on phones, tablets, and desktops.",
+    ],
+    keyPoints: [
+      { title: "SEO 최적화", desc: "CSR → SSR 전환을 통한 검색엔진 최적화 및 성능 개선" },
+      { title: "다국어 지원", desc: "한국어·영어·일본어·중국어 간체·번체 지원 및 어드민 다국어 콘텐츠 관리 기능 구현" },
+      { title: "신규 지점 확장", desc: "신규 지점 서버 환경 설정 및 배포를 통한 서비스 운영 범위 확장" },
     ],
     contributions: [
       {
@@ -138,6 +150,11 @@ export const projects: Project[] = [
       "Integrated a suggestion engine that surfaces recipes based on dietary preferences and pantry availability.",
       "Shipped a polished responsive layout that feels at home on phones, tablets, and desktops.",
     ],
+    keyPoints: [
+      { title: "홈페이지 CMS", desc: "CRM에서 홈페이지 콘텐츠를 직접 관리할 수 있는 어드민 기능 구축" },
+      { title: "서비스 연동", desc: "상품 조회·예약 API 및 회원 데이터 연계를 통한 홈페이지와 CRM 통합" },
+      { title: "공통 컴포넌트", desc: "재사용 가능한 CRM 공통 UI 컴포넌트 개발을 통한 화면 일관성 및 유지보수성 개선" },
+    ],
     contributions: [
       {
         level1 : "CRM 기반 홈페이지 관리 기능 개발",
@@ -218,6 +235,10 @@ export const projects: Project[] = [
       "Integrated a suggestion engine that surfaces recipes based on dietary preferences and pantry availability.",
       "Shipped a polished responsive layout that feels at home on phones, tablets, and desktops.",
     ],
+    keyPoints: [
+      { title: "공통 UI 모듈화", desc: "계좌 목록·거래내역 등 조회 화면의 공통 기능 구현 및 재사용성 개선" },
+      { title: "사용자 편의성 재고", desc: "입력값 검증, 자동 포커스, 입력 형식 제어 등 공통 입력 기능 개선" },
+    ],
     contributions: [
       {
         level1 : "조회 메뉴 하위 모든 화면 UI 통일 및 개선",
@@ -289,6 +310,10 @@ export const projects: Project[] = [
       "Implemented state synchronization that keeps filters aligned across charts and tables.",
       "Delivered dark mode theming for control center environments.",
     ],
+    keyPoints: [
+      { title: "React 전환", desc: "기존 JSP·jQuery 기반 화면에 React를 적용한 점진적 전환" },
+      { title: "로딩 성능 개선", desc: "GIF 온보딩 애니메이션을 Lottie로 교체해 로딩 시간 약 2초에서 1초 미만으로 단축" },
+    ],
     contributions: [
       {
         level1 : "온보딩 화면 개선",
@@ -345,6 +370,10 @@ export const projects: Project[] = [
       "Implemented secure Supabase integration for journaling data and account auth.",
       "Launched growth moments including email recaps and shareable achievements.",
     ],
+    keyPoints: [
+      { title: "내부통제 기능", desc: "하위 이용자의 뱅킹 이력 및 권한을 관리하는 인증서·이상 로그인 조회 기능 구현" },
+      { title: "권한 관리", desc: "보조관리자 권한 설정 및 이용·이체시간 관리 기능 개발을 통한 사용자 권한 세분화" },
+    ],
    contributions: [
       {
         level1 : "내부통제 안심센터 신메뉴 개설",
@@ -385,6 +414,10 @@ export const projects: Project[] = [
       "Prototyped the full experience in Figma and translated it into coded UI components.",
       "Implemented secure Supabase integration for journaling data and account auth.",
       "Launched growth moments including email recaps and shareable achievements.",
+    ],
+    keyPoints: [
+      { title: "내부통제 기능", desc: "하위 이용자 이용시간 관리 및 뱅킹관리 이력조회 메뉴 개발" },
+      { title: "다국어 화면 개선", desc: "다국어 페이지의 화면 오류 수정 및 각종 증명서 UI 개선" },
     ],
    contributions: [
       {

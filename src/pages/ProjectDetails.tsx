@@ -1,19 +1,38 @@
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
-  ExternalLink,
-  Github,
+  CheckCircle2,
   Sparkles,
+  Star,
+  MonitorSmartphone,
+  Server,
+  Cloud,
+  FolderGit2,
+  Ellipsis,
+  Pin,
+  House,
+  type LucideIcon,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { projects } from "@/data/projects";
+import { groupSkills, type SkillCategory } from "@/data/skillCategories";
 import { Gallery } from "@/components/Gallery";
+
+const categoryIcons: Record<SkillCategory, LucideIcon> = {
+  Frontend: MonitorSmartphone,
+  Backend: Server,
+  Infra: Cloud,
+  Tools: FolderGit2,
+  Etc: Ellipsis,
+};
 
 export default function ProjectDetails() {
   const { slug } = useParams<{ slug: string }>();
-  const project = projects.find((item) => item.slug === slug);
+  const index = projects.findIndex((item) => item.slug === slug);
+  const project = projects[index];
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   if (!project) {
     return (
@@ -38,7 +57,7 @@ export default function ProjectDetails() {
             </Link>
             <a
               href="mailto:hello@jangyeyoung.dev"
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-6 py-3 text-sm font-semibold text-foreground/80"
+              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/60 px-6 py-3 text-sm font-semibold text-foreground/80"
             >
               Email hello@jangyeyoung.dev
             </a>
@@ -48,350 +67,322 @@ export default function ProjectDetails() {
     );
   }
 
-  const otherProjects = projects.filter((item) => item.slug !== project.slug);
+  const prevProject = projects[index - 1];
+  const nextProject = projects[index + 1];
+  const skillGroups = groupSkills(project.skills);
 
   return (
-    <article className="space-y-24 pb-24">
-      <section className="container space-y-10 pt-20 md:pt-10">
-        <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/70 px-4 py-2 text-xs font-semibold text-foreground/70 transition-colors hover:border-primary/50 hover:text-foreground"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-          </Link>
-          <span className="rounded-full border border-border/70 px-4 py-2 text-[0.65rem] font-semibold text-foreground/60">
-            Project Detail
-          </span>
-        </div>
-        <div className="grid gap-8">
-          <div className="space-y-6">
-            <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.35em] text-foreground/60">
-              <span className="rounded-full bg-secondary px-4 py-2 text-[0.65rem] font-semibold text-secondary-foreground">
-                {project.year}
-              </span>
-            </div>
+    <article className="relative space-y-16 pb-24">
+      {/* Hero */}
+      <section className="container space-y-8 pt-20 md:pt-10">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/70 px-4 py-2 text-xs font-semibold text-foreground/70 transition-colors hover:border-primary/50 hover:text-foreground"
+        >
+          <House  className="h-3.5 w-3.5" />
+        </Link>
 
-            <h1 className="font-display text-4xl text-foreground md:text-5xl font-notoSans">
+        <div
+          className={
+            project.heroImage
+              ? "grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]"
+              : "grid gap-10"
+          }
+        >
+          <div className="space-y-6">
+            <span className="inline-flex items-center rounded-full border border-border/70 bg-card/60 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-foreground/70">
+              {project.year}
+            </span>
+            <h1 className="text-4xl font-extrabold leading-tight text-foreground font-notoSans md:text-5xl">
               {project.name}
             </h1>
-
-            <p className="max-w-2xl text-lg text-foreground/70 md:text-xl font-notoSans">
+            <p className="max-w-2xl text-lg text-foreground/60 font-notoSans">
               {project.summary}
             </p>
-            <div className="space-y-3 pt-2">
-              <p className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-                Skills used
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {project.skills.map((skill) => (
+
+            {project.keyPoints && project.keyPoints.length > 0 && (
+              <div className="space-y-4 pt-2">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-foreground font-notoSans">
+                  <Sparkles className="size-4 min-w-4 text-primary" />
+                  Summary
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {project.keyPoints.map((point) => (
+                    <div
+                      key={point.title}
+                      className="rounded-2xl border border-border/30 bg-card/30 p-5 shadow-sm"
+                    >
+                      <span className="mb-3 flex size-9 items-center justify-center rounded-full bg-primary/15 text-primary">
+                        <Pin className="size-4" />
+                      </span>
+                      <p className="text-xl font-bold text-foreground font-notoSans">
+                        {point.title}
+                      </p>
+                      <p className="mt-1 text-sm text-foreground/60 font-notoSans">
+                        {point.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {project.heroImage && (
+            <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/60 shadow-glow">
+              <img
+                src={project.heroImage}
+                alt={project.name}
+                className="w-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Skills */}
+      <section className="container">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-foreground font-notoSans">
+          <Sparkles className="size-4 min-w-4 text-primary" />
+          기술스택
+        </h2>
+        <div className="space-y-3 rounded-2xl border border-border/30 bg-card/30 p-6 mt-2">
+          {skillGroups.map(({ category, skills }) => (
+            <div
+              key={category}
+              className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6"
+            >
+              <span className="flex w-28 shrink-0 items-center gap-2 text-sm font-semibold text-foreground/70 font-notoSans">
+                {(() => {
+                  const Icon = categoryIcons[category];
+                  return <Icon className="size-4 min-w-4 text-primary" />;
+                })()}
+                {category}
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-primary"
+                    className="rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary"
                   >
-                    <Sparkles className="h-3.5 w-3.5" />
                     {skill}
                   </span>
                 ))}
               </div>
             </div>
-          </div>
-          {/*<aside className="space-y-6 rounded-3xl border border-border/70 bg-card/80 p-8 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              Project links
-            </h2>
-            <ul className="space-y-3">
-              {project.links.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group inline-flex w-full items-center justify-between rounded-2xl border border-border/60 bg-card px-4 py-3 text-sm font-semibold text-foreground/80 transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    {link.label}
-                    <ExternalLink className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 text-sm text-primary">
-              Curious how this could look for your product? I’d love to tailor a
-              creative spike—just send over your brief.
-            </div>
-          </aside>*/}
+          ))}
         </div>
       </section>
 
-      {/* <section className="container grid gap-12 lg:grid-cols-1">
-        <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-          Contribution
-        </h2>
-        <div className="space-y-8 rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-          <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-            Contribution
-          </h2>
-          <ul className="space-y-5">
-            {project.contributions.map((contribution) => (
-              <li key={contribution.level1} className="flex gap-4">
-                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/70" />
-                <p className="text-base text-foreground/70">{contribution.level1}</p>
-                <ul className="space-y-2">
-                  {contribution.level2.map((item, i) => (
-                    <li key={i} className="flex gap-4">
-                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-primary/10" />
-                      <p className="text-base text-foreground/70">{contribution.level2[i]}</p>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="space-y-8">
-          <div className="rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              What I developed
-            </h2>
-            <ul className="mt-6 space-y-4">
-              {project.contributions.map((contribution) => (
-                <li key={contribution.level1} className="flex gap-3 text-sm text-foreground/70">
-                  <ArrowRight className="mt-1 h-4 w-4 text-primary" />
-                  <span>{contribution.level1}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="rounded-3xl border border-border/70 bg-card/80 p-10 shadow-glow">
-            <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-              Collaborate with me
-            </h2>
-            <p className="mt-4 text-sm text-foreground/65">
-              I’m exploring partnerships with founders and product teams who value
-              meticulous craft. Share your roadmap and I’ll assemble a sprint
-              plan tailored to your goals.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="mailto:hello@jangyeyoung.dev"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-brand"
-              >
-                Start a conversation
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <a
-                href="https://cal.com/jangyeyoung/intro"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-2 text-sm font-semibold text-foreground/80"
-              >
-                Schedule a call
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>*/}
-
-      <section className="container grid gap-4 lg:grid-cols-1">
-        <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-          Contribution
-        </h2>
-
-        {project.contributions.map((contribution) => (
-          <div
-            key={contribution.level1}>
-            <h3 className="flex items-center gap-2 px-1 pb-4 pt-4 text-lg font-bold text-foreground font-notoSans">
-              <Sparkles className="size-4 min-w-4 text-primary" />
-              {contribution.level1}
-            </h3>
-            {contribution.level2.length > 0
-              ? <div className="space-y-10 rounded-3xl border border-border/70 bg-card/20 p-6 shadow-glow">
-                <ul className="space-y-2">
-                  {contribution.level2.map((item, i) => (
-                    <li key={item} className="flex gap-4">
-                      <span className="mt-2 size-2.5 min-w-2.5 rounded-full bg-primary/80" />
-                      <p className="text-base text-foreground/70 font-notoSans">{contribution.level2[i]}</p>
-                    </li>
-                  ))}
-                  {contribution.img.length > 0
-                  ? <li className="flex gap-4">
-                      <div className="space-y-6">
-                        <Gallery images={contribution.img} projectName={project.slug} />
-                      </div>
-                    </li>
-                    :<></>}
-                    
-                </ul>
-              </div>
-              : <></>}
-          </div>
-        ))}
-      </section>
-
+      {/* Improvements: Problem → Solution → Result */}
       {project.improvements.length > 0 && (
-        <section className="container grid gap-4 lg:grid-cols-1">
-          <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
-            Improvements
-          </h2>
-
+        <section className="container space-y-10">
           {project.improvements.map((improvement) => (
             <div key={improvement.title} className="space-y-4">
-              <h3 className="flex items-center gap-2 px-1 pt-4 text-lg font-bold text-foreground font-notoSans">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-foreground font-notoSans">
                 <Sparkles className="size-4 min-w-4 text-primary" />
                 {improvement.title}
-              </h3>
-              <div className="grid items-stretch gap-4 lg:grid-cols-3">
-                {(
-                  [
-                    {
-                      label: "문제",
-                      items: improvement.problem,
-                      card: "border-destructive/30 bg-destructive/5",
-                      accent: "text-destructive",
-                      dot: "bg-destructive/60",
-                      text: "text-foreground/70",
-                    },
-                    {
-                      label: "해결 및 구현",
-                      items: improvement.solution,
-                      card: "border-border/70 bg-card/30",
-                      accent: "text-foreground/80",
-                      dot: "bg-foreground/40",
-                      text: "text-foreground/70",
-                    },
-                    {
-                      label: "결과",
-                      items: improvement.result,
-                      card: "border-primary/50 bg-primary/10 shadow-glow",
-                      accent: "text-primary",
-                      dot: "bg-primary",
-                      text: "text-foreground font-medium",
-                    },
-                  ] as const
-                ).map((col) =>
-                  col.items.length > 0 ? (
-                    <div
-                      key={col.label}
-                      className={`space-y-4 rounded-3xl border p-6 ${col.card}`}
-                    >
-                      <h4
-                        className={`text-base font-bold font-notoSans ${col.accent}`}
-                      >
-                        {col.label}
-                      </h4>
-                      <ul className="space-y-2.5">
-                        {col.items.map((item, i) => (
-                          <li key={i} className="flex gap-3">
-                            <span
-                              className={`mt-2.5 size-1.5 min-w-1.5 rounded-full ${col.dot}`}
-                            />
-                            <p
-                              className={`text-base leading-relaxed font-notoSans ${col.text}`}
-                            >
-                              {item}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null
-                )}
+              </h2>
+
+              <div className="grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr_auto_1fr]">
+                <FlowCard
+                  label="Problem"
+                  icon={<AlertCircle className="size-5" />}
+                  items={improvement.problem}
+                  tone="problem"
+                />
+                <FlowArrow />
+                <FlowCard
+                  label="Solution"
+                  icon={<CheckCircle2 className="size-5" />}
+                  items={improvement.solution}
+                  tone="solution"
+                />
+                <FlowArrow />
+                <FlowCard
+                  label="Result"
+                  icon={<Star className="size-5" />}
+                  items={improvement.result}
+                  tone="result"
+                />
               </div>
             </div>
           ))}
         </section>
       )}
 
-      {/*{otherProjects.length > 0 ? (
-        <section className="container space-y-8">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.35em] text-foreground/50">
-                More playful explorations
-              </p>
-              <h2 className="font-display text-3xl text-foreground md:text-4xl">
-                Continue browsing the archive.
-              </h2>
-            </div>
-            <Link
-              to="/#work"
-              className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
-            >
-              Back to toy projects
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {otherProjects.map((other) => (
-              <Link
-                key={other.slug}
-                to={`/projects/${other.slug}`}
-                className="group relative flex h-full flex-col rounded-3xl border border-border/70 bg-card/80 p-7 shadow-glow transition-transform duration-500 hover:-translate-y-2 hover:border-primary/50"
-              >
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-foreground/50">
-                  <span className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground">
-                    {other.year}
-                  </span>
-                  <ArrowRight className="h-5 w-5 text-primary transition-transform duration-500 group-hover:translate-x-1" />
-                </div>
-                <h3 className="mt-6 font-display text-2xl text-foreground">
-                  {other.name}
-                </h3>
-                <p className="mt-3 text-sm text-foreground/65">{other.summary}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {other.skills.slice(0, 3).map((skill) => (
-                    <span
-                      key={skill}
-                      className="inline-flex items-center rounded-full border border-border/70 bg-muted/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-foreground/70"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      {/* Contributions */}
+      <section className="container space-y-6">
+        <h2 className="flex items-center gap-2 text-lg font-bold text-foreground font-notoSans">
+          <Sparkles className="size-4 min-w-4 text-primary" />
+          주요 기여 및 수행 내용
+        </h2>
 
-      <section className="container">
-        <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-primary/20 via-accent/25 to-background p-12 shadow-glow md:p-16">
-          <div className="absolute inset-0 bg-card-gloss opacity-80" />
-          <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-xl space-y-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-foreground/60">
-                Let’s collaborate
-              </p>
-              <h2 className="font-display text-3xl text-foreground md:text-4xl">
-                Have a vision? Let’s prototype it together.
-              </h2>
-              <p className="text-sm text-foreground/65">
-                I blend rapid prototyping with production-ready engineering. Share
-                your challenge and I’ll align on a roadmap within days.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="mailto:hello@jangyeyoung.dev"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-brand"
+        <div className="grid gap-4 md:grid-cols-2">
+          {project.contributions.map((contribution, i) => {
+            const hasImages = contribution.img.length > 0;
+            return (
+              <div
+                key={contribution.level1}
+                className={`rounded-2xl border border-border/30 bg-card/30 p-6 shadow-sm ${
+                  hasImages ? "md:col-span-2" : ""
+                }`}
               >
-                hello@jangyeyoung.dev
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <a
-                href="https://github.com/jangyeyoung"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card px-6 py-3 text-sm font-semibold text-foreground/80"
-              >
-                GitHub
-                <Github className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex size-8 min-w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="text-base font-bold text-foreground font-notoSans">
+                    {contribution.level1}
+                  </h3>
+                </div>
+
+                {contribution.level2.length > 0 && (
+                  <ul className="mt-4 space-y-2 pl-11">
+                    {contribution.level2.map((item) => (
+                      <li key={item} className="flex gap-3">
+                        <span className="mt-2.5 size-1.5 min-w-1.5 rounded-full bg-foreground/30" />
+                        <p className="text-sm leading-relaxed text-foreground/70 font-notoSans">
+                          {item}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {hasImages && (
+                  <div className="mt-6">
+                    <Gallery
+                      images={contribution.img}
+                      projectName={project.slug}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
-      </section> */}
+      </section>
+
+      {/* Prev / Next */}
+      <nav className="container">
+        <div className="flex items-center justify-between gap-6 border-t border-border/60 pt-8">
+          {prevProject ? (
+            <Link
+              to={`/projects/${prevProject.slug}`}
+              className="group flex min-w-0 items-center gap-4"
+            >
+              <span className="flex size-10 min-w-10 items-center justify-center rounded-full border border-border/70 bg-card/60 text-foreground/60 transition-colors group-hover:border-primary/50 group-hover:text-primary">
+                <ArrowLeft className="size-4" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-xs text-foreground/50">
+                  이전 프로젝트
+                </span>
+                <span className="block truncate text-sm font-bold text-foreground font-notoSans">
+                  {prevProject.name}
+                </span>
+              </span>
+            </Link>
+          ) : (
+            <span />
+          )}
+
+          {nextProject ? (
+            <Link
+              to={`/projects/${nextProject.slug}`}
+              className="group flex min-w-0 items-center justify-end gap-4 text-right"
+            >
+              <span className="min-w-0">
+                <span className="block text-xs text-foreground/50">
+                  다음 프로젝트
+                </span>
+                <span className="block truncate text-sm font-bold text-foreground font-notoSans">
+                  {nextProject.name}
+                </span>
+              </span>
+              <span className="flex size-10 min-w-10 items-center justify-center rounded-full border border-border/70 bg-card/60 text-foreground/60 transition-colors group-hover:border-primary/50 group-hover:text-primary">
+                <ArrowRight className="size-4" />
+              </span>
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
+      </nav>
+
+      {/* 상단 배경 그라데이션
+          - space-y-16 의 첫 자식이 absolute 이면 Hero 에 margin-top 이 붙어 article 이 64px 밀리므로 마지막 자식으로 둔다
+          - 마지막 자식은 space-y 의 margin-top 이 붙어 그라데이션이 64px 아래서 시작하므로 !mt-0 으로 제거 */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 !mt-0 h-[32rem] bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
     </article>
+  );
+}
+
+type Tone = "problem" | "solution" | "result";
+
+const toneStyles: Record<
+  Tone,
+  { card: string; head: string; dot: string; text: string }
+> = {
+  problem: {
+    card: "border-destructive/20 bg-destructive/5",
+    head: "text-destructive",
+    dot: "bg-destructive/60",
+    text: "text-foreground/70",
+  },
+  solution: {
+    card: "border-emerald-500/20 bg-emerald-500/5",
+    head: "text-emerald-600",
+    dot: "bg-emerald-500/60",
+    text: "text-foreground/70",
+  },
+  result: {
+    card: "border-primary/40 bg-primary/10 shadow-glow",
+    head: "text-primary",
+    dot: "bg-primary",
+    text: "text-foreground font-semibold",
+  },
+};
+
+function FlowCard({
+  label,
+  icon,
+  items,
+  tone,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  items: string[];
+  tone: Tone;
+}) {
+  const style = toneStyles[tone];
+  return (
+    <div className={`space-y-4 rounded-2xl border p-6 ${style.card}`}>
+      <div className={`flex items-center gap-2 ${style.head}`}>
+        {icon}
+        <h3 className="text-base font-bold">{label}</h3>
+      </div>
+      <ul className="space-y-2.5">
+        {items.map((item) => (
+          <li key={item} className="flex gap-3">
+            <span
+              className={`mt-2.5 size-1.5 min-w-1.5 rounded-full ${style.dot}`}
+            />
+            <p className={`text-sm leading-relaxed font-notoSans ${style.text}`}>
+              {item}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function FlowArrow() {
+  return (
+    <div className="hidden items-center justify-center text-primary/50 lg:flex">
+      <ArrowRight className="size-5" />
+    </div>
   );
 }
