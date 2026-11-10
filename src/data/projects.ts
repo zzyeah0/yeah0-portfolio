@@ -1,5 +1,12 @@
 import { images } from '@/img/portfolioimg';
 
+export interface Improvement {
+  title: string;
+  problem: string[];
+  solution: string[];
+  result: string[];
+}
+
 export interface Project {
   slug: string;
   name: string;
@@ -14,6 +21,7 @@ export interface Project {
     level2: string[];
     img: string[];
   }[];
+  improvements: Improvement[];
   links: {
     label: string;
     href: string;
@@ -82,6 +90,25 @@ export const projects: Project[] = [
         img : [],
       }
     ],
+    improvements: [
+      {
+        title: "검색엔진 최적화를 위한 렌더링 구조 개선 문제",
+        problem: [
+          "기존 CSR 방식의 검색 노출 한계를 개선하기 위해 Nuxt 기반 SSR 구조로 전환",
+          "localStorage 기반 언어 설정을 서버 초기 렌더링 단계에서 확인할 수 없는 문제 발생",
+          "관리자 콘텐츠 수정 후 기존 캐시가 남아 변경 사항이 반영되지 않는 문제 발생",
+        ],
+        solution: [
+          "Nuxt SSR 구조로 전환하고, localStorage 대신 Nuxt i18n의 locale URL prefix를 활용, 서버에서도 언어를 식별할 수 있도록 개선",
+          "관리자 콘텐츠 수정 API 호출 이후 관련 캐시를 삭제하도록 구현해 변경된 콘텐츠가 사용자 화면에 반영되도록 처리",
+          "Sitemap, robots.txt, 301 리다이렉트, Title/Description, 구조화 데이터 및 LLMS 등 SEO 요소 적용",
+        ],
+        result: [
+          "검색엔진의 페이지 콘텐츠 수집을 고려한 렌더링 구조 개선",
+          "SSR 환경의 초기 언어 식별 문제 해결 및 관리자 콘텐츠 변경 사항의 반영 구조 개선",
+        ]
+      }      
+    ],
     links: [
       {
         label: "Live Site",
@@ -140,6 +167,25 @@ export const projects: Project[] = [
         img : [],
       }
     ],
+    improvements: [
+      {
+        title: "공통 컴포넌트 개발",
+        problem: [
+          "애자일 방식으로 개발이 진행되어 화면정의서와 퍼블리싱 없이 화면이 구현",
+          "화면별로 UI 요소의 크기, 폰트, 간격 등 스타일이 일관되지 않아 전체적인 UI 통일성이 떨어지는 문제 발생",
+          "여러 화면에서 유사한 UI를 개별적으로 구현하면서 일관된 스타일을 유지하고 관리할 수 있는 구조 필요",
+        ],
+        solution: [
+          "기존 CRM 화면의 UI 패턴을 분석해 공통으로 활용할 수 있는 요소를 Vue 컴포넌트로 분리",
+          "Props를 활용해 화면별 데이터와 설정을 전달하도록 구성하여 동일한 컴포넌트를 여러 화면에서 재사용할 수 있도록 구현",
+          "공통 컴포넌트를 통해 UI 요소의 스타일과 구조를 일관되게 관리할 수 있도록 개선",
+        ],
+        result: [
+          "화면별로 달랐던 UI 요소의 스타일과 구조를 통일",
+          "공통 UI의 재사용성을 높이고, 수정 및 유지보수가 용이한 컴포넌트 구조 마련",
+        ]
+      }   
+    ],
     links: [
       {
         label: "Live Site",
@@ -191,6 +237,24 @@ export const projects: Project[] = [
         ],
         img : [],
       }
+    ],
+    improvements: [
+      {
+        title: "요구사항 분석 및 화면 명세 구체화",
+        problem: [
+          "기업뱅킹은 사용자 권한과 사업자 유형에 따라 화면 구성 및 제공 기능이 달라지지만, 초기 기획 단계에서 이러한 조건별 화면이 충분히 확인되지 않은 상태로 화면정의서가 전달됨",
+          "기획서만으로는 실제 개발 대상 화면과 예외 조건을 명확하게 파악하기 어려웠음",
+        ],
+        solution: [
+          "기존 소스 코드를 분석해 사용자 권한 및 사업자 유형에 따른 화면 분기 조건과 기능을 역으로 파악",
+          "코드에서 확인한 조건을 바탕으로 기획자에게 실제 화면의 구성과 차이를 전달하고, 누락된 화면 및 요구사항을 구체화하도록 협의",
+          "확인된 요구사항을 기준으로 화면별 개발 및 기능 개선 진행",
+        ],
+        result: [
+          "초기 기획 단계에서 누락된 조건별 화면을 구체화하고 개발 요건을 명확히 하는 데 기여",
+          "기획자와의 협업을 통해 화면 요구사항을 보완하고 개발 과정의 불확실성을 줄임",
+        ]
+      }   
     ],
     links: [
       {
@@ -252,6 +316,7 @@ export const projects: Project[] = [
         img : images.jb_3,
       }
     ],
+    improvements: [],
     links: [
       {
         label: "Product Brief",
@@ -292,6 +357,7 @@ export const projects: Project[] = [
         img : [],
       },
     ],
+    improvements: [],
     links: [
       {
         label: "Case Study",
@@ -341,6 +407,7 @@ export const projects: Project[] = [
         img : [],
       }
     ],
+    improvements: [],
     links: [
       {
         label: "Case Study",
@@ -386,6 +453,7 @@ export const projects: Project[] = [
         img : [],
       }
     ],
+    improvements: [],
     links: [
       {
         label: "Case Study",

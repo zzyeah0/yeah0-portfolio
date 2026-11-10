@@ -201,11 +201,10 @@ export default function ProjectDetails() {
         {project.contributions.map((contribution) => (
           <div
             key={contribution.level1}>
-            <span className="inline-flex items-center gap-2 px-4 py-2 text-l font-semibold uppercase tracking-[0.3em] text-primary font-notoSans"
-            >
-              <Sparkles className="size-4 min-w-4" />
+            <h3 className="flex items-center gap-2 px-1 pb-4 pt-4 text-lg font-bold text-foreground font-notoSans">
+              <Sparkles className="size-4 min-w-4 text-primary" />
               {contribution.level1}
-            </span>
+            </h3>
             {contribution.level2.length > 0
               ? <div className="space-y-10 rounded-3xl border border-border/70 bg-card/20 p-6 shadow-glow">
                 <ul className="space-y-2">
@@ -230,6 +229,79 @@ export default function ProjectDetails() {
         ))}
       </section>
 
+      {project.improvements.length > 0 && (
+        <section className="container grid gap-4 lg:grid-cols-1">
+          <h2 className="text-sm uppercase tracking-[0.35em] text-foreground/60">
+            Improvements
+          </h2>
+
+          {project.improvements.map((improvement) => (
+            <div key={improvement.title} className="space-y-4">
+              <h3 className="flex items-center gap-2 px-1 pt-4 text-lg font-bold text-foreground font-notoSans">
+                <Sparkles className="size-4 min-w-4 text-primary" />
+                {improvement.title}
+              </h3>
+              <div className="grid items-stretch gap-4 lg:grid-cols-3">
+                {(
+                  [
+                    {
+                      label: "문제",
+                      items: improvement.problem,
+                      card: "border-destructive/30 bg-destructive/5",
+                      accent: "text-destructive",
+                      dot: "bg-destructive/60",
+                      text: "text-foreground/70",
+                    },
+                    {
+                      label: "해결 및 구현",
+                      items: improvement.solution,
+                      card: "border-border/70 bg-card/30",
+                      accent: "text-foreground/80",
+                      dot: "bg-foreground/40",
+                      text: "text-foreground/70",
+                    },
+                    {
+                      label: "결과",
+                      items: improvement.result,
+                      card: "border-primary/50 bg-primary/10 shadow-glow",
+                      accent: "text-primary",
+                      dot: "bg-primary",
+                      text: "text-foreground font-medium",
+                    },
+                  ] as const
+                ).map((col) =>
+                  col.items.length > 0 ? (
+                    <div
+                      key={col.label}
+                      className={`space-y-4 rounded-3xl border p-6 ${col.card}`}
+                    >
+                      <h4
+                        className={`text-base font-bold font-notoSans ${col.accent}`}
+                      >
+                        {col.label}
+                      </h4>
+                      <ul className="space-y-2.5">
+                        {col.items.map((item, i) => (
+                          <li key={i} className="flex gap-3">
+                            <span
+                              className={`mt-2.5 size-1.5 min-w-1.5 rounded-full ${col.dot}`}
+                            />
+                            <p
+                              className={`text-base leading-relaxed font-notoSans ${col.text}`}
+                            >
+                              {item}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null
+                )}
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
 
       {/*{otherProjects.length > 0 ? (
         <section className="container space-y-8">
