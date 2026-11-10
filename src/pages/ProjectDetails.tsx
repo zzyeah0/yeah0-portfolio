@@ -306,7 +306,23 @@ export default function ProjectDetails() {
               </span>
             </Link>
           ) : (
-            <span />
+            // 마지막 프로젝트(1번)에서는 Toy Projects 페이지로 이동
+            <Link
+              to="/toyproject"
+              className="group flex min-w-0 items-center justify-end gap-4 text-right"
+            >
+              <span className="min-w-0">
+                <span className="block text-xs text-foreground/50">
+                  다음 프로젝트
+                </span>
+                <span className="block truncate text-sm font-bold text-foreground font-notoSans">
+                  Toy Projects
+                </span>
+              </span>
+              <span className="flex size-10 min-w-10 items-center justify-center rounded-full border border-border/70 bg-card/60 text-foreground/60 transition-colors group-hover:border-primary/50 group-hover:text-primary">
+                <ArrowRight className="size-4" />
+              </span>
+            </Link>
           )}
         </div>
       </nav>

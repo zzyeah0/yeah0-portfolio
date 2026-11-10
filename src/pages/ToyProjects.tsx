@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ArrowRight,
   ExternalLink,
   House,
@@ -14,6 +15,7 @@ import { useState, type ComponentProps } from "react";
 import { Link } from "react-router-dom";
 import { images } from "@/img/portfolioimg";
 import { Gallery } from "@/components/Gallery";
+import { projects } from "@/data/projects";
 import { groupSkills, type SkillCategory } from "@/data/skillCategories";
 
 const categoryIcons: Record<SkillCategory, LucideIcon> = {
@@ -144,6 +146,7 @@ export default function ToyProjects() {
 
   const [projectNum, setProjectNum] = useState(0);
   const project = toyProjects[projectNum];
+  const prevProject = projects[projects.length - 1];
   const skillGroups = groupSkills(project.skills);
 
   return (
@@ -299,6 +302,31 @@ export default function ToyProjects() {
           </ul>
         </div>
       </section>
+
+      {/* Prev (ProjectDetails 의 마지막 프로젝트로 이동) */}
+      {prevProject && (
+        <nav className="container">
+          <div className="flex items-center justify-between gap-6 border-t border-border/60 pt-8">
+            <Link
+              to={`/projects/${prevProject.slug}`}
+              className="group flex min-w-0 items-center gap-4"
+            >
+              <span className="flex size-10 min-w-10 items-center justify-center rounded-full border border-border/70 bg-card/60 text-foreground/60 transition-colors group-hover:border-primary/50 group-hover:text-primary">
+                <ArrowLeft className="size-4" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-xs text-foreground/50">
+                  이전 프로젝트
+                </span>
+                <span className="block truncate text-sm font-bold text-foreground font-notoSans">
+                  {prevProject.name}
+                </span>
+              </span>
+            </Link>
+            <span />
+          </div>
+        </nav>
+      )}
 
       {/* 상단 배경 그라데이션 (ProjectDetails 와 동일, 마지막 자식 + !mt-0 필수) */}
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 !mt-0 h-[32rem] bg-gradient-to-b from-primary/10 via-accent/10 to-transparent" />
